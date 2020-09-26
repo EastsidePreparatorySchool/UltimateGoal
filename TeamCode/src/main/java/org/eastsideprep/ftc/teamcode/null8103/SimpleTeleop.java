@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.eastsideprep.8103;
+package org.eastsideprep.ftc.teamcode.null8103;
 
 import java.util.Arrays;
 
@@ -35,7 +35,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.eastsideprep.eps8103.Hardware8103;
+
+
 
 @TeleOp(name = "Trajan summer Teleop")
 

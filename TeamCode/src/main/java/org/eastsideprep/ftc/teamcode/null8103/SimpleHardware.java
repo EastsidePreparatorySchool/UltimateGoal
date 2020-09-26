@@ -1,19 +1,9 @@
-package org.eastsideprep.eps8103;
+package org.eastsideprep.ftc.teamcode.null8103;
 
-import com.qualcomm.hardware.motors.RevRoboticsCoreHexMotor;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-
-import com.qualcomm.robotcore.hardware.ColorSensor;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
 
 /**
  * Hardware definitions for 8103
