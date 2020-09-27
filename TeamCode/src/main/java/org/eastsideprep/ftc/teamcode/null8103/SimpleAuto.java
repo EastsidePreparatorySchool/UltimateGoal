@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Autonomous(name = "Simple Auto")
-public class skyStoneAuto extends LinearOpMode {
+public class SimpleAuto extends LinearOpMode {
 
     SimpleHardware robot = new SimpleHardware();
 
@@ -38,11 +38,16 @@ public class skyStoneAuto extends LinearOpMode {
         robot.rightBackMotor.setPower(-0.05);
     }
 
-    public void turnleft() {
-        robot.leftFrontMotor.setPower(0.25);
-        robot.leftBackMotor.setPower(-0.25);
-        robot.rightBackMotor.setPower(-0.25);
-        robot.rightFrontMotor.setPower(0.25);
+    public void turnleft(double power, double time) {
+        robot.leftFrontMotor.setPower(-power);
+        robot.leftBackMotor.setPower(-power);
+        robot.rightBackMotor.setPower(power);
+        robot.rightFrontMotor.setPower(power);
+        sleep((long) time);
+        robot.leftBackMotor.setPower(0);
+        robot.leftFrontMotor.setPower(0);
+        robot.rightFrontMotor.setPower(0);
+        robot.rightBackMotor.setPower(0);
     }
 
     public void backwards() {
@@ -101,25 +106,29 @@ public class skyStoneAuto extends LinearOpMode {
     public void runOpMode() {
 
         robot.init(hardwareMap); //load hardware from other program
-        telemetry.addData("log", "Ready to go...")
+        print("Ready to go");
 
         waitForStart();
 
+        driveForward(1, 1500);
+
+        turnleft(0.75, 2000);
+
+        //driveForward(0.3, 1000);
+
+        motorStop();
+        print("finished");
+
 
         while (opModeIsActive()) {
-
-            driveForward(0.45, 2000);
-
-            turnleft();
-            sleep(1500);
-
-            driveForward(0.3, 1000);
-
-            motorStop();
-
         }
 
 
+    }
+
+    public void print(String text) {
+        telemetry.addData("log", text);
+        telemetry.update();
     }
 
 }
