@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 public class SimpleHardware {
     /* Public OpMode members. */
+
+
     public DcMotor leftFrontMotor = null;
     public DcMotor rightFrontMotor = null;
     public DcMotor leftBackMotor = null;
@@ -39,6 +41,7 @@ public class SimpleHardware {
         rightFrontMotor = hwMap.dcMotor.get("RF");
         leftBackMotor = hwMap.dcMotor.get("LB");
         rightBackMotor = hwMap.dcMotor.get("RB");
+
 
 
         allMotors = new DcMotor[]{leftFrontMotor, rightFrontMotor, leftBackMotor, rightBackMotor};
