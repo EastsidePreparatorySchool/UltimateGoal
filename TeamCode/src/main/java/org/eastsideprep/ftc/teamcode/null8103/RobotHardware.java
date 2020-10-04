@@ -1,10 +1,7 @@
 package org.eastsideprep.ftc.teamcode.null8103;
 
 import com.arcrobotics.ftclib.hardware.RevIMU;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class RobotHardware {
 
@@ -28,7 +25,8 @@ public class RobotHardware {
         rightBack = new YellowJacket19_2(hwMap, "RB");
         leftBack = new YellowJacket19_2(hwMap, "LB");
 
-        revIMU = new RevIMU(hwMap);
+        revIMU = new RevIMU(hwMap, "imu");
+        revIMU.init();
     }
 
 

@@ -42,7 +42,7 @@ public class YellowJacket19_2 implements Motor {
 
     @Override
     public String getDeviceType() {
-        return null;
+        return this.getClass().toString();
     }
 
     @Override

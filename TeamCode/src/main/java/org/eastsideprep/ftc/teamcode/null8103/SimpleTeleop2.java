@@ -29,18 +29,14 @@
 
 package org.eastsideprep.ftc.teamcode.null8103;
 
-import java.util.Arrays;
-
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.hardware.RevIMU;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
 
 
-@TeleOp(name = "Field Centric Teleop")
+@TeleOp(name = "Teleop 2")
 
 public class SimpleTeleop2 extends LinearOpMode {
 
@@ -63,13 +59,20 @@ public class SimpleTeleop2 extends LinearOpMode {
 
         MecanumDrive mecanumDrive = new MecanumDrive(robot.leftFront, robot.rightFront, robot.leftBack, robot.rightBack);
         GamepadEx gamepad = new GamepadEx(gamepad1);
-        //mecanumDrive.driveRobotCentric(gamepad.getLeftX(), gamepad.getLeftY(), gamepad.getRightX());
-        mecanumDrive.driveFieldCentric(gamepad.getLeftX(), gamepad.getLeftY(), gamepad.getRightX(), robot.revIMU.getAbsoluteHeading());
 
 
+        double speedControl = 0.9;
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-
+            if (gamepad.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
+                speedControl = 0.5;
+            } else {
+                speedControl = 0.9;
+            }
+            //mecanumDrive.driveRobotCentric(speedControl * gamepad.getLeftX(), speedControl * gamepad.getLeftY(), speedControl * gamepad.getRightX());
+            mecanumDrive.driveFieldCentric(speedControl * gamepad.getLeftX(), speedControl * gamepad.getLeftY(), speedControl * gamepad.getRightX(), robot.revIMU.getAbsoluteHeading());
+            telemetry.addData("imu data", robot.revIMU.getAbsoluteHeading());
+            telemetry.update();
         }
     }
 }
