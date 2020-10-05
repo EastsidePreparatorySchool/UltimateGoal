@@ -124,10 +124,6 @@ public class cwRobot
             m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
 
-        // Define and initialize ALL installed servos.
-        phoneServo = hwMap.servo.get("phoneServo");
-        phoneServo.setPosition(PHONE_VERTICAL);
-
 //        imuParameters = new BNO055IMU.Parameters();
 //        imuParameters.accelRange = BNO055IMU.AccelRange.G16;
 //        imuParameters.gyroRange = BNO055IMU.GyroRange.DPS500;
