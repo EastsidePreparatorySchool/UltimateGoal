@@ -29,12 +29,10 @@
 
 package org.eastsideprep.ftc.teamcode.eps9884;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -71,6 +69,7 @@ public class BasicOpMode_Iterative extends OpMode
     double speed = 0.5;
     double turn;
     double threshold = 0.05;
+    int mode = 3;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -114,7 +113,7 @@ public class BasicOpMode_Iterative extends OpMode
 
 
         getInput();
-        totalControl();
+        setMotorValues();
         frontLeft.setPower(fLM);
         frontRight.setPower(fRM);
         backLeft.setPower(bLM);
@@ -138,7 +137,60 @@ public class BasicOpMode_Iterative extends OpMode
         g1RightAnalogY = thresholdCheck(this.gamepad1.right_stick_y);
         g1LeftAnalogX = thresholdCheck(this.gamepad1.left_stick_x);
         g1LeftAnalogY = thresholdCheck(this.gamepad1.left_stick_y);
+        speed += (this.gamepad1.right_trigger-this.gamepad1.left_trigger) / 2;
+
+        turn = getTurn();
+        if (this.gamepad1.dpad_up) {
+            // turn while moving
+            mode = 0;
+
+        } else if (this.gamepad1.dpad_right) {
+            // turn in place
+            mode = 1;
+
+        } else if (this.gamepad1.dpad_down) {
+            //strafe
+            mode = 2;
+
+        } else if (this.gamepad1.dpad_left) {
+            //  total control
+            mode = 3;
+
+        }
     }
+    public double getTurn() {
+
+        return g1RightAnalogX;
+
+    }
+
+    public void setMotorValues() {
+
+
+        switch (mode) {
+
+            case 0: {
+                turnWhileMoving();
+                break;
+            }
+            case 1: {
+                turnInPlace();
+                break;
+            }
+            case 2: {
+                strafe();
+                break;
+            }
+            case 3: {
+                totalControl();
+                break;
+            }
+
+        }
+
+
+    }
+
 
     public double thresholdCheck(double motor) {
         if (-threshold < motor && motor < threshold) {
@@ -149,6 +201,37 @@ public class BasicOpMode_Iterative extends OpMode
 
         return motor;
     }
+
+
+    public void turnInPlace() {
+        turn = getTurn();
+        fLM = turn * speed;
+        bLM = turn * speed;
+        fRM = -turn * speed;
+        bRM = -turn * speed;
+
+
+    }
+
+    public void turnWhileMoving() {
+
+        fLM = (-g1LeftAnalogY + turn) * speed;
+        bLM = (-g1LeftAnalogY + turn) * speed;
+        fRM = (-g1LeftAnalogY + -turn) * speed;
+        bRM = (-g1LeftAnalogY + -turn) * speed;
+
+
+    }
+
+    public void strafe() {
+
+        fLM = g1LeftAnalogX * speed;
+        bLM = -g1LeftAnalogX * speed;
+        fRM = -g1LeftAnalogX * speed;
+        bRM = g1LeftAnalogX * speed;
+
+    }
+
     public void totalControl() {
 
         fLM = (-g1LeftAnalogY + turn + g1LeftAnalogX) * speed;
