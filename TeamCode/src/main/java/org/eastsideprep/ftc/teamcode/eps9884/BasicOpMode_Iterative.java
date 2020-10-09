@@ -90,12 +90,6 @@ public class BasicOpMode_Iterative extends OpMode
         telemetry.addData("Status", "Initialized");
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
-    @Override
-    public void init_loop() {
-    }
 
     /*
      * Code to run ONCE when the driver hits PLAY
