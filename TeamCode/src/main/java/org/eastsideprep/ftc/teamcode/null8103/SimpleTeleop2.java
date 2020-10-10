@@ -61,16 +61,21 @@ public class SimpleTeleop2 extends LinearOpMode {
         GamepadEx gamepad = new GamepadEx(gamepad1);
 
 
-        double speedControl = 0.9;
+        double speedControl;
+        double ySpeed, xSpeed, turnSpeed, gyroAngle;
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             if (gamepad.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
-                speedControl = 0.5;
+                speedControl = 0.4;
             } else {
-                speedControl = 0.9;
+                speedControl = 1;
             }
-            //mecanumDrive.driveRobotCentric(speedControl * gamepad.getLeftX(), speedControl * gamepad.getLeftY(), speedControl * gamepad.getRightX());
-            mecanumDrive.driveFieldCentric(speedControl * gamepad.getLeftX(), speedControl * gamepad.getLeftY(), speedControl * gamepad.getRightX(), robot.revIMU.getAbsoluteHeading());
+            xSpeed = speedControl * gamepad.getLeftX();
+            ySpeed = speedControl * gamepad.getLeftY();
+            turnSpeed = speedControl * gamepad.getRightX();
+            gyroAngle = Math.toDegrees(robot.revIMU.getAbsoluteHeading()*Math.PI + Math.PI);//imu data is a double from -1 to 1, convert to 0 to 2pi
+            //mecanumDrive.driveRobotCentric(xSpeed, ySpeed, turnSpeed, true);
+            mecanumDrive.driveFieldCentric(xSpeed, ySpeed, turnSpeed, gyroAngle, true);//squaring inputs is more precise
             telemetry.addData("imu data", robot.revIMU.getAbsoluteHeading());
             telemetry.update();
         }
