@@ -36,9 +36,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
-@TeleOp(name = "Teleop 2")
+@TeleOp(name = "Fire Teleop")
 
-public class SimpleTeleop2 extends LinearOpMode {
+public class Teleop_A extends LinearOpMode {
 
     /* Declare OpMode members. */
     RobotHardware robot = new RobotHardware();
@@ -61,24 +61,39 @@ public class SimpleTeleop2 extends LinearOpMode {
         GamepadEx gamepad = new GamepadEx(gamepad1);
 
 
-        double speedControl;
+        //double speedControl;
+
+        //both of these are tuned manually to driver preference
+        double driveGain = 0.6;
+        double turnGain = 0.3;
+
         double ySpeed, xSpeed, turnSpeed, gyroAngle;
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            if (gamepad.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
-                speedControl = 0.4;
-            } else {
-                speedControl = 1;
-            }
-            xSpeed = speedControl * gamepad.getLeftX();
-            ySpeed = speedControl * gamepad.getLeftY();
-            turnSpeed = speedControl * gamepad.getRightX();
-            gyroAngle = Math.toDegrees(robot.revIMU.getAbsoluteHeading()*Math.PI + Math.PI);//imu data is a double from -1 to 1, convert to 0 to 2pi
+//            if (gamepad.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
+//                speedControl = 0.4;
+//            } else {
+//                speedControl = 1;
+//            }
+            xSpeed = ether(gamepad.getLeftX(), driveGain);
+            ySpeed = ether(gamepad.getLeftY(), driveGain);
+            turnSpeed = ether(gamepad.getRightX(), turnGain);
+            gyroAngle = Math.toDegrees(robot.revIMU.getAbsoluteHeading() * Math.PI + Math.PI);//imu data is a double from -1 to 1, convert to 0 to 2pi
             //mecanumDrive.driveRobotCentric(xSpeed, ySpeed, turnSpeed, true);
             mecanumDrive.driveFieldCentric(xSpeed, ySpeed, turnSpeed, gyroAngle, true);//squaring inputs is more precise
-            telemetry.addData("imu data", robot.revIMU.getAbsoluteHeading());
+            telemetry.addData("imu data", gyroAngle);
             telemetry.update();
         }
+    }
+
+    //see graph at https://www.desmos.com/calculator/dx7yql2ekh
+    public static double ether(double x, double p) {
+        double min = 0.2; //this means that very small joystick movements give enough power to overcome friction
+        double max = 1; //max power is 1
+        if (x < 0) {
+            min = -min;
+        }
+        return min + (1 - min) * (p * Math.pow(x, 3) + (1 - p) * x);
     }
 }
 
