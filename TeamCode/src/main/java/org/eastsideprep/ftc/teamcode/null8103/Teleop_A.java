@@ -36,7 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
-@TeleOp(name = "Fire Teleop")
+@TeleOp(name = "Teleop A")
 
 public class Teleop_A extends LinearOpMode {
 
@@ -64,6 +64,7 @@ public class Teleop_A extends LinearOpMode {
         //double speedControl;
 
         //both of these are tuned manually to driver preference
+        //used in the ether function to map gamepad -> drivetrain controls
         double driveGain = 0.6;
         double turnGain = 0.3;
 
