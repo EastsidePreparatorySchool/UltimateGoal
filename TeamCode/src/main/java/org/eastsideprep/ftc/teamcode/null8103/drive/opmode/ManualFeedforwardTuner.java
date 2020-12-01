@@ -13,15 +13,15 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.teamcode.drive.DriveConstants;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.eastsideprep.ftc.teamcode.null8103.drive.DriveConstants;
+import org.eastsideprep.ftc.teamcode.null8103.drive.SampleMecanumDrive;
 
 import java.util.Objects;
 
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.RUN_USING_ENCODER;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kA;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kStatic;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
+import static org.eastsideprep.ftc.teamcode.null8103.drive.DriveConstants.RUN_USING_ENCODER;
+import static org.eastsideprep.ftc.teamcode.null8103.drive.DriveConstants.kA;
+import static org.eastsideprep.ftc.teamcode.null8103.drive.DriveConstants.kStatic;
+import static org.eastsideprep.ftc.teamcode.null8103.drive.DriveConstants.kV;
 
 /*
  * This routine is designed to tune the open-loop feedforward coefficients. Although it may seem unnecessary,

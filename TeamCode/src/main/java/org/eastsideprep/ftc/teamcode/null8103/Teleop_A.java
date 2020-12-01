@@ -79,10 +79,10 @@ public class Teleop_A extends LinearOpMode {
             xSpeed = ether(gamepad.getLeftX(), driveGain);
             ySpeed = ether(gamepad.getLeftY(), driveGain);
             turnSpeed = ether(gamepad.getRightX(), turnGain);
-            gyroAngle = Math.toDegrees(robot.revIMU.getAbsoluteHeading() * Math.PI + Math.PI);//imu data is a double from -1 to 1, convert to 0 to 2pi
-            //mecanumDrive.driveRobotCentric(xSpeed, ySpeed, turnSpeed, true);
-            mecanumDrive.driveFieldCentric(xSpeed, ySpeed, turnSpeed, gyroAngle, true);//squaring inputs is more precise
-            telemetry.addData("imu data", gyroAngle);
+            //gyroAngle = Math.toDegrees(robot.revIMU.getAbsoluteHeading() * Math.PI + Math.PI);//imu data is a double from -1 to 1, convert to 0 to 2pi
+            mecanumDrive.driveRobotCentric(xSpeed, ySpeed, turnSpeed, true);
+            //mecanumDrive.driveFieldCentric(xSpeed, ySpeed, turnSpeed, gyroAngle, true);//squaring inputs is more precise
+            //telemetry.addData("imu data", gyroAngle);
             telemetry.update();
         }
     }

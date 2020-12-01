@@ -25,8 +25,8 @@ public class RobotHardware {
         rightBack = new YellowJacket19_2(hwMap, "RB");
         leftBack = new YellowJacket19_2(hwMap, "LB");
 
-        revIMU = new RevIMU(hwMap, "imu");
-        revIMU.init();
+        //revIMU = new RevIMU(hwMap, "imu");
+        //revIMU.init();
     }
 
 
