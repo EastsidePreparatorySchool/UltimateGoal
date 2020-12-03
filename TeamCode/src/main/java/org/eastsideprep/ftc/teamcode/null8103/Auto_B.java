@@ -29,36 +29,177 @@
 
 package org.eastsideprep.ftc.teamcode.null8103;
 
-import com.arcrobotics.ftclib.drivebase.MecanumDrive;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-//simple skystone detection teleop
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
+import org.openftc.easyopencv.OpenCvPipeline;
+
+import static org.opencv.imgproc.Imgproc.cvtColor;
+
+//simple skystone detection teleop, code from https://github.com/OpenFTC/EasyOpenCV/blob/master/examples/src/main/java/org/openftc/easyopencv/examples/SkystoneDeterminationExample.java
 @Autonomous(name = "Auto B")
 
 public class Auto_B extends LinearOpMode {
 
-    /* Declare OpMode members. */
-    RobotHardware robot = new RobotHardware();
-
     @Override
     public void runOpMode() {
 
-        robot.init(hardwareMap);
-        /* Initialize the hardware variables.
-         * The init() method of the hardware class does all the work here
-         */
+        //these scary lines open the camera streaming
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        OpenCvInternalCamera phoneCam= OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);;
 
-        telemetry.addData("Say", "Ready");
-        telemetry.update();
+        //set the pipeline written below to the camera
+        SkystoneFinderPipeline skystoneFinder = new SkystoneFinderPipeline();
+        phoneCam.setPipeline(skystoneFinder);
 
-        // Wait for the game to start (driver presses PLAY)
+        phoneCam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
+
+        phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
+            @Override
+            public void onOpened()
+            {
+                phoneCam.startStreaming(320,240, OpenCvCameraRotation.SIDEWAYS_LEFT);
+            }
+        });
+
         waitForStart();
 
+        while (opModeIsActive())
+        {
+            telemetry.addData("The skystone is ", skystoneFinder.getResult());
+            telemetry.update();
 
+            // Don't burn CPU cycles busy-looping in this sample
+            sleep(1000);
+        }
+
+    }
+
+    private static class SkystoneFinderPipeline extends OpenCvPipeline {
+
+        //to find the skystone:
+        //look at three rectangles
+        //convert from RGB to YCrCb
+        //extract Cb channel (stones are yellow so lots of contrast in the blue channel against skystones)
+
+        //constants
+
+        static final Scalar BLUE = new Scalar(0, 0, 255);
+        static final Scalar GREEN = new Scalar(0, 255, 0);
+
+        /*
+         * The core values which define the location and size of the sample regions
+         */
+        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(109, 98);
+        static final Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(181, 98);
+        static final Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(253, 98);
+        static final int REGION_WIDTH = 20;
+        static final int REGION_HEIGHT = 20;//small sample space ensures that only we only check the stone
+
+        //the points needed to define the three rectangles
+        Point region1_pointA = new Point(
+                REGION1_TOPLEFT_ANCHOR_POINT.x,
+                REGION1_TOPLEFT_ANCHOR_POINT.y);
+        Point region1_pointB = new Point(
+                REGION1_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
+                REGION1_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
+        Point region2_pointA = new Point(
+                REGION2_TOPLEFT_ANCHOR_POINT.x,
+                REGION2_TOPLEFT_ANCHOR_POINT.y);
+        Point region2_pointB = new Point(
+                REGION2_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
+                REGION2_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
+        Point region3_pointA = new Point(
+                REGION3_TOPLEFT_ANCHOR_POINT.x,
+                REGION3_TOPLEFT_ANCHOR_POINT.y);
+        Point region3_pointB = new Point(
+                REGION3_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
+                REGION3_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
+
+
+        /*
+         * Working variables
+         */
+        Mat region1_Cb, region2_Cb, region3_Cb;
+        Mat YCrCb = new Mat();
+        Mat Cb = new Mat();
+        int avg1, avg2, avg3;
+
+
+        //this is separate from the main processing method because we want to set Cb once from the first frame
+        //to ensure that the three regions don't change if/when Cb is re-written to
+        @Override
+        public void init(Mat firstFrame) {
+
+            //openCV likes 2 params: input and output variable to set to
+            Imgproc.cvtColor(firstFrame, YCrCb, Imgproc.COLOR_RGB2YCrCb);
+            Core.extractChannel(YCrCb, Cb, 2);
+
+            region1_Cb = Cb.submat(new Rect(region1_pointA, region1_pointB));
+            region2_Cb = Cb.submat(new Rect(region2_pointA, region2_pointB));
+            region3_Cb = Cb.submat(new Rect(region3_pointA, region3_pointB));
+        }
+
+        String outputMessage;
+
+        @Override
+        public Mat processFrame(Mat input) {
+
+            Imgproc.cvtColor(input, YCrCb, Imgproc.COLOR_RGB2YCrCb);
+            Core.extractChannel(YCrCb, Cb, 2);
+
+            //average over each of the three regions
+            avg1 = (int) Core.mean(region1_Cb).val[0];
+            avg2 = (int) Core.mean(region2_Cb).val[0];
+            avg3 = (int) Core.mean(region3_Cb).val[0];
+
+            //draw a rectangle over each region to see what is being processed
+            Imgproc.rectangle(
+                    input, // Buffer to draw on
+                    region1_pointA, // First point which defines the rectangle
+                    region1_pointB, // Second point which defines the rectangle
+                    BLUE, // The color the rectangle is drawn in
+                    2); // Thickness of the rectangle lines
+            Imgproc.rectangle(
+                    input, // Buffer to draw on
+                    region2_pointA, // First point which defines the rectangle
+                    region2_pointB, // Second point which defines the rectangle
+                    BLUE, // The color the rectangle is drawn in
+                    2); // Thickness of the rectangle lines
+            Imgproc.rectangle(
+                    input, // Buffer to draw on
+                    region3_pointA, // First point which defines the rectangle
+                    region3_pointB, // Second point which defines the rectangle
+                    BLUE, // The color the rectangle is drawn in
+                    2); // Thickness of the rectangle lines
+
+            int max = Math.max(avg1, Math.max(avg2, avg3));
+
+            if (max == avg1) {
+                outputMessage = "left";
+            } else if (max == avg2) {
+                outputMessage = "center";
+            } else if (max == avg3) {
+                outputMessage = "right";
+            }
+
+            return input;//camera input with the rectangles drawn on top
+        }
+
+        public String getResult(){
+            return outputMessage;
+        }
     }
 }
 
