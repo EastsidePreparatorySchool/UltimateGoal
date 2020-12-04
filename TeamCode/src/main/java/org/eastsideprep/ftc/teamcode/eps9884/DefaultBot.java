@@ -9,7 +9,9 @@ public class DefaultBot implements Robot {
 
     private HardwareMap hardwareMap;
     IMU imu;
+    DriveTrain driveTrain;
     Telemetry telemetry;
+    Boolean rightFlipped = true;
 
     DefaultBot(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
@@ -22,6 +24,8 @@ public class DefaultBot implements Robot {
         imu = new IMU(hardwareMap, telemetry);
         imu.init();
 
+        driveTrain = new DriveTrain(hardwareMap, telemetry, rightFlipped);
+        driveTrain.init();
 
     }
 
