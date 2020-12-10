@@ -99,9 +99,9 @@ public class Auto_B extends LinearOpMode {
         /*
          * The core values which define the location and size of the sample regions
          */
-        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(109, 98);
+        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(70, 98);
         static final Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(181, 98);
-        static final Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(253, 98);
+        static final Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(290, 98);
         static final int REGION_WIDTH = 20;
         static final int REGION_HEIGHT = 20;//small sample space ensures that only we only check the stone
 
