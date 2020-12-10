@@ -56,7 +56,8 @@ public class Auto_B extends LinearOpMode {
 
         //these scary lines open the camera streaming
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        OpenCvInternalCamera phoneCam= OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);;
+        OpenCvInternalCamera phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+        ;
 
         //set the pipeline written below to the camera
         SkystoneFinderPipeline skystoneFinder = new SkystoneFinderPipeline();
@@ -64,19 +65,16 @@ public class Auto_B extends LinearOpMode {
 
         phoneCam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
 
-        phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
+        phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
-            public void onOpened()
-            {
-                phoneCam.startStreaming(320,240, OpenCvCameraRotation.SIDEWAYS_LEFT);
+            public void onOpened() {
+                phoneCam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
             }
         });
 
         waitForStart();
 
-        while (opModeIsActive())
-        {
+        while (opModeIsActive()) {
             telemetry.addData("The skystone is ", skystoneFinder.getResult());
             telemetry.update();
 
@@ -188,16 +186,34 @@ public class Auto_B extends LinearOpMode {
 
             if (max == avg1) {
                 outputMessage = "left";
+                Imgproc.rectangle(
+                        input, // Buffer to draw on
+                        new Point(REGION1_TOPLEFT_ANCHOR_POINT.x - 10, REGION1_TOPLEFT_ANCHOR_POINT.y - 10), // First point which defines the rectangle
+                        new Point(REGION1_TOPLEFT_ANCHOR_POINT.x + 30, REGION1_TOPLEFT_ANCHOR_POINT.y + 30), // Second point which defines the rectangle
+                        GREEN, // The color the rectangle is drawn in
+                        2); // Thickness of the rectangle lines
             } else if (max == avg2) {
                 outputMessage = "center";
+                Imgproc.rectangle(
+                        input, // Buffer to draw on
+                        new Point(REGION2_TOPLEFT_ANCHOR_POINT.x - 10, REGION2_TOPLEFT_ANCHOR_POINT.y - 10), // First point which defines the rectangle
+                        new Point(REGION2_TOPLEFT_ANCHOR_POINT.x + 30, REGION2_TOPLEFT_ANCHOR_POINT.y + 30), // Second point which defines the rectangle
+                        GREEN, // The color the rectangle is drawn in
+                        2); // Thickness of the rectangle lines
             } else if (max == avg3) {
                 outputMessage = "right";
+                Imgproc.rectangle(
+                        input, // Buffer to draw on
+                        new Point(REGION3_TOPLEFT_ANCHOR_POINT.x - 10, REGION3_TOPLEFT_ANCHOR_POINT.y - 10), // First point which defines the rectangle
+                        new Point(REGION3_TOPLEFT_ANCHOR_POINT.x + 30, REGION3_TOPLEFT_ANCHOR_POINT.y + 30), // Second point which defines the rectangle
+                        GREEN, // The color the rectangle is drawn in
+                        2); // Thickness of the rectangle lines
             }
 
             return input;//camera input with the rectangles drawn on top
         }
 
-        public String getResult(){
+        public String getResult() {
             return outputMessage;
         }
     }
