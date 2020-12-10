@@ -56,8 +56,8 @@ public class Auto_B extends LinearOpMode {
 
         //these scary lines open the camera streaming
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+
         OpenCvInternalCamera phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
-        ;
 
         //set the pipeline written below to the camera
         SkystoneFinderPipeline skystoneFinder = new SkystoneFinderPipeline();
@@ -91,7 +91,7 @@ public class Auto_B extends LinearOpMode {
         //convert from RGB to YCrCb
         //extract Cb channel (stones are yellow so lots of contrast in the blue channel against skystones)
 
-        //constants
+        //colors (for drawing rectangles)
 
         static final Scalar BLUE = new Scalar(0, 0, 255);
         static final Scalar GREEN = new Scalar(0, 255, 0);
@@ -165,22 +165,22 @@ public class Auto_B extends LinearOpMode {
             //draw a rectangle over each region to see what is being processed
             Imgproc.rectangle(
                     input, // Buffer to draw on
-                    region1_pointA, // First point which defines the rectangle
-                    region1_pointB, // Second point which defines the rectangle
-                    BLUE, // The color the rectangle is drawn in
-                    2); // Thickness of the rectangle lines
+                    region1_pointA, // top left corner
+                    region1_pointB, // bottom right corner
+                    BLUE, // rectangle color
+                    2); //rectangle line thickness
             Imgproc.rectangle(
-                    input, // Buffer to draw on
-                    region2_pointA, // First point which defines the rectangle
-                    region2_pointB, // Second point which defines the rectangle
-                    BLUE, // The color the rectangle is drawn in
-                    2); // Thickness of the rectangle lines
+                    input,
+                    region2_pointA,
+                    region2_pointB,
+                    BLUE,
+                    2);
             Imgproc.rectangle(
-                    input, // Buffer to draw on
-                    region3_pointA, // First point which defines the rectangle
-                    region3_pointB, // Second point which defines the rectangle
-                    BLUE, // The color the rectangle is drawn in
-                    2); // Thickness of the rectangle lines
+                    input,
+                    region3_pointA,
+                    region3_pointB,
+                    BLUE,
+                    2);
 
             int max = Math.max(avg1, Math.max(avg2, avg3));
 
@@ -188,26 +188,26 @@ public class Auto_B extends LinearOpMode {
                 outputMessage = "left";
                 Imgproc.rectangle(
                         input, // Buffer to draw on
-                        new Point(REGION1_TOPLEFT_ANCHOR_POINT.x - 10, REGION1_TOPLEFT_ANCHOR_POINT.y - 10), // First point which defines the rectangle
-                        new Point(REGION1_TOPLEFT_ANCHOR_POINT.x + 30, REGION1_TOPLEFT_ANCHOR_POINT.y + 30), // Second point which defines the rectangle
-                        GREEN, // The color the rectangle is drawn in
-                        2); // Thickness of the rectangle lines
+                        new Point(REGION1_TOPLEFT_ANCHOR_POINT.x - 10, REGION1_TOPLEFT_ANCHOR_POINT.y - 10), //top left corner
+                        new Point(REGION1_TOPLEFT_ANCHOR_POINT.x + 30, REGION1_TOPLEFT_ANCHOR_POINT.y + 30), //bottom right corner
+                        GREEN,  //rectangle color
+                        2); //rectangle line thickness
             } else if (max == avg2) {
                 outputMessage = "center";
                 Imgproc.rectangle(
-                        input, // Buffer to draw on
-                        new Point(REGION2_TOPLEFT_ANCHOR_POINT.x - 10, REGION2_TOPLEFT_ANCHOR_POINT.y - 10), // First point which defines the rectangle
-                        new Point(REGION2_TOPLEFT_ANCHOR_POINT.x + 30, REGION2_TOPLEFT_ANCHOR_POINT.y + 30), // Second point which defines the rectangle
-                        GREEN, // The color the rectangle is drawn in
-                        2); // Thickness of the rectangle lines
+                        input,
+                        new Point(REGION2_TOPLEFT_ANCHOR_POINT.x - 10, REGION2_TOPLEFT_ANCHOR_POINT.y - 10),
+                        new Point(REGION2_TOPLEFT_ANCHOR_POINT.x + 30, REGION2_TOPLEFT_ANCHOR_POINT.y + 30),
+                        GREEN,
+                        2);
             } else if (max == avg3) {
                 outputMessage = "right";
                 Imgproc.rectangle(
-                        input, // Buffer to draw on
-                        new Point(REGION3_TOPLEFT_ANCHOR_POINT.x - 10, REGION3_TOPLEFT_ANCHOR_POINT.y - 10), // First point which defines the rectangle
-                        new Point(REGION3_TOPLEFT_ANCHOR_POINT.x + 30, REGION3_TOPLEFT_ANCHOR_POINT.y + 30), // Second point which defines the rectangle
-                        GREEN, // The color the rectangle is drawn in
-                        2); // Thickness of the rectangle lines
+                        input,
+                        new Point(REGION3_TOPLEFT_ANCHOR_POINT.x - 10, REGION3_TOPLEFT_ANCHOR_POINT.y - 10),
+                        new Point(REGION3_TOPLEFT_ANCHOR_POINT.x + 30, REGION3_TOPLEFT_ANCHOR_POINT.y + 30),
+                        GREEN,
+                        2);
             }
 
             return input;//camera input with the rectangles drawn on top
