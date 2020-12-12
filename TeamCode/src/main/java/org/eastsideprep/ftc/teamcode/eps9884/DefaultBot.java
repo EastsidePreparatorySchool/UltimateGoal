@@ -55,11 +55,29 @@ public class DefaultBot implements Robot {
         if (!driveTrain.getRunningWithEncoders()) {
             driveTrain.runWithEncoders();
         }
+        runMotors(speed, speed, -speed, -speed);
+
        /* while (Math.abs(angle - imu.getAngle()) > margin, ){
-            runMotors(speed, speed, -speed, -speed);
+
 
         }*/
     }
+
+    public void driveTime(long millis, Double speed, Runnable runnable){
+        long start = System.currentTimeMillis();
+        runMotors(speed, speed, speed, speed);
+
+        /*while(Math.abs(start-System.currentTimeMillis())<millis, ){
+
+
+        }*/
+
+
+
+    }
+
+
+
 
 
 }
