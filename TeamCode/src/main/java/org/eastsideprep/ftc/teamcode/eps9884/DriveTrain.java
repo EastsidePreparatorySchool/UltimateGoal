@@ -4,15 +4,18 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class DriveTrain {
-    DcMotor frontLeftMotor;
-    DcMotor backLeftMotor;
-    DcMotor frontRightMotor;
-    DcMotor backRightMotor;
+    private DcMotor frontLeftMotor;
+    private DcMotor backLeftMotor;
+    private DcMotor frontRightMotor;
+    private DcMotor backRightMotor;
+    private Boolean runningWithEncoders;
     Boolean rightFlipped; // are the motors on the right side flipped?
     HardwareMap hardwareMap;
+
     // if false, the motors on the left side are flipped
     Telemetry telemetry;
 
@@ -42,10 +45,6 @@ public class DriveTrain {
 
     public void runMotors(double fL, double bL, double fR, double bR){
         DcMotor[] dt = asArray();
-        dt[0].setPower(fL);
-        dt[1].setPower(bL);
-        dt[2].setPower(fR);
-        dt[3].setPower(bR);
         if(rightFlipped){
             fR *= -1;
             bR *= -1;
@@ -53,6 +52,11 @@ public class DriveTrain {
             fL *= -1;
             bL *= -1;
         }
+        dt[0].setPower(fL);
+        dt[1].setPower(bL);
+        dt[2].setPower(fR);
+        dt[3].setPower(bR);
+
 
     }
 
@@ -73,6 +77,7 @@ public class DriveTrain {
         dt[1].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         dt[2].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         dt[3].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        runningWithEncoders = true;
     }
 
     public void runWithoutEncoders(){
@@ -81,12 +86,12 @@ public class DriveTrain {
         dt[1].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         dt[2].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         dt[3].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        runningWithEncoders = false;
     }
 
 
     public DcMotor[] asArray(){
         DcMotor[] motors = new DcMotor[4];
-
         motors[0] = frontLeftMotor;
         motors[1] = backLeftMotor;
         motors[2] = frontRightMotor;
@@ -94,7 +99,7 @@ public class DriveTrain {
         return motors;
     }
 
-    public String encoders(){
+    public String getEncoders(){
         String enc = "";
         DcMotor[] motors = asArray();
         enc+=" fL EncPos: "+motors[0].getCurrentPosition();
@@ -103,6 +108,51 @@ public class DriveTrain {
         enc+=" bR EncPos: "+motors[3].getCurrentPosition();
 
         return enc;
+    }
+
+    public String getPowers(){
+        String pow = "";
+        DcMotor[] motors = asArray();
+        pow+=" fL Pow: "+motors[0].getPower();
+        pow+=" bL Pow: "+motors[1].getPower();
+        pow+=" fR Pow: "+motors[2].getPower();
+        pow+=" bR Pow: "+motors[3].getPower();
+
+        return pow;
+
+
+    }
+
+    public Boolean getRunningWithEncoders(){
+        return runningWithEncoders;
+    }
+    public Boolean getRightFlipped(){
+        return rightFlipped;
+    }
+
+    public void testTelemetry() {
+        telemetry.addAction(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
+
+        telemetry.addLine().addData("Motor Encoders", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return getEncoders();
+                    }
+                }
+        );
+
+        telemetry.addLine().addData("Motor Powers", new Func<String>() {
+            @Override
+            public String value() {
+                return getPowers();
+            }
+
+        });
     }
 
 }

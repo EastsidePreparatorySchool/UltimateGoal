@@ -54,10 +54,7 @@ public class BasicOpMode_Iterative extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor frontLeft = null;
-    private DcMotor frontRight = null;
-    private DcMotor backLeft = null;
-    private DcMotor backRight = null;
+    private DefaultBot bot;
     double g1LeftAnalogX;
     double g1LeftAnalogY;
     double g1RightAnalogX;
@@ -81,10 +78,8 @@ public class BasicOpMode_Iterative extends OpMode
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        frontLeft  = hardwareMap.get(DcMotor.class, "front_left");
-        frontRight = hardwareMap.get(DcMotor.class, "front_right");
-        backLeft  = hardwareMap.get(DcMotor.class, "back_left");
-        backRight = hardwareMap.get(DcMotor.class, "back_right");
+        bot = new DefaultBot(hardwareMap, telemetry, this);
+        bot.init();
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -108,11 +103,7 @@ public class BasicOpMode_Iterative extends OpMode
 
         getInput();
         setMotorValues();
-        frontLeft.setPower(fLM);
-        frontRight.setPower(fRM);
-        backLeft.setPower(bLM);
-        backRight.setPower(bRM);
-
+        bot.runMotors(fLM, bLM, fRM, bRM);
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("Motors", "flm (%.2f),  frm (%.2f), blm (%.2f), brm (%.2f)", fLM, fRM, bLM, bRM);
