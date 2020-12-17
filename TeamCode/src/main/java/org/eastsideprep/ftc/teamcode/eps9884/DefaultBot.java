@@ -65,10 +65,11 @@ public class DefaultBot implements Robot {
 
     public void driveTime(long millis, Double speed, Runnable runnable){
         long start = System.currentTimeMillis();
+        Boolean condition = false;
         runMotors(speed, speed, speed, speed);
 
-        /*while(Math.abs(start-System.currentTimeMillis())<millis, ){
-
+        /*while(Math.abs(start-System.currentTimeMillis())<millis, condition){
+            condition = runnable.run();
 
         }*/
 
