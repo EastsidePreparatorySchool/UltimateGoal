@@ -12,7 +12,7 @@ public class TestMode extends OpMode{
 
     @Override
     public void init() {
-        defaultBot = new DefaultBot(hardwareMap, telemetry);
+        defaultBot = new DefaultBot(hardwareMap, telemetry, this);
         defaultBot.init();
 
     }
