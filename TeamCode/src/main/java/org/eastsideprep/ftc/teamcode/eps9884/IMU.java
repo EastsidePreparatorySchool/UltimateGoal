@@ -25,7 +25,7 @@ public class IMU {
     private BNO055IMU.CalibrationStatus calibStatus;
 
     public IMU(HardwareMap hardwareMap, Telemetry telemetry) {
-        imu = hardwareMap.get(BNO055IMU.class, "IMU");
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
         this.telemetry = telemetry;
     }
 
