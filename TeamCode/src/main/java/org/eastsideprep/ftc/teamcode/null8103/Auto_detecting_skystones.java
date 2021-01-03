@@ -47,9 +47,9 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import static org.opencv.imgproc.Imgproc.cvtColor;
 
 //simple skystone detection teleop, code from https://github.com/OpenFTC/EasyOpenCV/blob/master/examples/src/main/java/org/openftc/easyopencv/examples/SkystoneDeterminationExample.java
-@Autonomous(name = "Auto B")
+@Autonomous(name = "detecting skystones")
 
-public class Auto_B extends LinearOpMode {
+public class Auto_detecting_skystones extends LinearOpMode {
 
     @Override
     public void runOpMode() {

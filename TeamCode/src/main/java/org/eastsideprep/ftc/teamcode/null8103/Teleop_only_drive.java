@@ -36,10 +36,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
-@TeleOp(name = "Teleop A")
+@TeleOp(name = "only drive")
 
 //simple drive teleop
-public class Teleop_A extends LinearOpMode {
+public class Teleop_only_drive extends LinearOpMode {
 
     /* Declare OpMode members. */
     RobotHardware robot = new RobotHardware();
@@ -91,11 +91,7 @@ public class Teleop_A extends LinearOpMode {
     //see graph at https://www.desmos.com/calculator/dx7yql2ekh
     public static double ether(double x, double p) {
         double min = 0.2; //this means that very small joystick movements give enough power to overcome friction
-        double max = 1; //max power is 1
-        if (x < 0) {
-            min = -min;
-        }
-        return min + (1 - min) * (p * Math.pow(x, 3) + (1 - p) * x);
+        return Math.min(min + (1 - min) * (p * Math.pow(x, 3) + (1 - p) * x), 1);//max power is 1
     }
 }
 

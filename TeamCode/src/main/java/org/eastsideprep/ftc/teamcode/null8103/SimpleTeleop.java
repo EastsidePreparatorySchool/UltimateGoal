@@ -31,13 +31,14 @@ package org.eastsideprep.ftc.teamcode.null8103;
 
 import java.util.Arrays;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 
 
-
+@Disabled
 @TeleOp(name = "Trajan summer Teleop")
 
 public class SimpleTeleop extends LinearOpMode {

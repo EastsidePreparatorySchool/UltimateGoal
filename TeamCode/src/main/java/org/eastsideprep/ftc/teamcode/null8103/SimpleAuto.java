@@ -1,12 +1,14 @@
 package org.eastsideprep.ftc.teamcode.null8103;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Disabled
 @Autonomous(name = "Simple Auto")
 public class SimpleAuto extends LinearOpMode {
 

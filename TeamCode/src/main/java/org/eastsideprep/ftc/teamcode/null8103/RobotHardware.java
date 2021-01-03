@@ -13,6 +13,8 @@ public class RobotHardware {
     public YellowJacket19_2 rightBack = null;
     public YellowJacket19_2 leftBack = null;
 
+    public YellowJacket3_7 intake = null;
+
     RevIMU revIMU = null;
 
     public RobotHardware() {
@@ -24,6 +26,8 @@ public class RobotHardware {
         rightFront = new YellowJacket19_2(hwMap, "RF");
         rightBack = new YellowJacket19_2(hwMap, "RB");
         leftBack = new YellowJacket19_2(hwMap, "LB");
+
+        //intake = new YellowJacket3_7(hwMap, "intake");
 
         //revIMU = new RevIMU(hwMap, "imu");
         //revIMU.init();
