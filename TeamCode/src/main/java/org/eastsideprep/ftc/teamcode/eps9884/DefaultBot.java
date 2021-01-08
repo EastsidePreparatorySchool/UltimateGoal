@@ -6,6 +6,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 public class DefaultBot implements Robot {
 
     private HardwareMap hardwareMap;
@@ -57,20 +60,30 @@ public class DefaultBot implements Robot {
         }
         runMotors(speed, speed, -speed, -speed);
 
-       /* while (Math.abs(angle - imu.getAngle()) > margin, ){
+       while (Math.abs(angle - imu.getAngle()) > margin, ){
 
 
-        }*/
+        }
     }
 
-    public void driveTime(long millis, Double speed, Runnable runnable){
+    /**
+     *
+     * @param millis
+     * @param speed
+     * @param check this is a function (supplier), no input
+     *  one boolean output. It produces a condition to be
+     *  constantly checked while running the while loop
+     *  if true, close the loop, stop driving.
+     *  so that you can do stuff like check if opMode was shut off or
+     *  check if something is in view or whatever else.
+     */
+    public void driveTime(long millis, Double speed, Supplier<Boolean> check){
         long start = System.currentTimeMillis();
         Boolean condition = false;
         runMotors(speed, speed, speed, speed);
 
-        /*while(Math.abs(start-System.currentTimeMillis())<millis, condition){
-            condition = runnable.run();
-
+        /*while(Math.abs(start-System.currentTimeMillis())<millis && !condition){
+            condition = check.;
         }*/
 
 
