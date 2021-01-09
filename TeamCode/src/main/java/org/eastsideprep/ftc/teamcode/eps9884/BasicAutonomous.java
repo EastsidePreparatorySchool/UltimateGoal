@@ -31,7 +31,7 @@ public class BasicAutonomous extends LinearOpMode {
 
         long timerMS = 1000;
         bot.driveTime(timerMS, 0.5);
-        bot.turnToAngle(Math.toRadians(180), 0.25, 1.0);
+        bot.turnToAngle(Math.toRadians(180), 0.25, 2.0);
         bot.driveTime(timerMS, 0.5);
 
 
