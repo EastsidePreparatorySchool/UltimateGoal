@@ -1,6 +1,8 @@
 package org.eastsideprep.ftc.teamcode.eps9884;
 
 
+import android.os.Build;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -60,11 +62,28 @@ public class DefaultBot implements Robot {
         }
         runMotors(speed, speed, -speed, -speed);
 
-       while (Math.abs(angle - imu.getAngle()) > margin, ){
-
-
+       while (Math.abs(angle - imu.getAngle()) > margin){
+           testTelemetry();
+            telemetry.update();
         }
     }
+
+    /**
+     *
+     * @param millis
+     * @param speed
+     */
+    public void driveTime(long millis, Double speed){
+        long start = System.currentTimeMillis();
+        runMotors(speed, speed, speed, speed);
+
+        while(Math.abs(start-System.currentTimeMillis())<millis){
+            testTelemetry();
+            telemetry.update();
+        }
+    }
+
+
 
     /**
      *
@@ -77,18 +96,22 @@ public class DefaultBot implements Robot {
      *  so that you can do stuff like check if opMode was shut off or
      *  check if something is in view or whatever else.
      */
-    public void driveTime(long millis, Double speed, Supplier<Boolean> check){
+    //@android.support.annotation.RequiresApi(api = Build.VERSION_CODES.N)
+    void driveTime(long millis, Double speed, Function<DefaultBot, Boolean> check){
         long start = System.currentTimeMillis();
         Boolean condition = false;
         runMotors(speed, speed, speed, speed);
 
-        /*while(Math.abs(start-System.currentTimeMillis())<millis && !condition){
-            condition = check.;
-        }*/
+        while(Math.abs(start-System.currentTimeMillis())<millis && !condition){
+            testTelemetry();
+            telemetry.update();
+            //condition = check.apply(this);
+        }
 
 
 
     }
+
 
 
 
