@@ -3,6 +3,8 @@ package org.eastsideprep.ftc.teamcode.null8103;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+
 public class RobotHardware {
 
     HardwareMap hwMap = null;
@@ -27,13 +29,11 @@ public class RobotHardware {
         rightBack = new YellowJacket19_2(hwMap, "RB");
         leftBack = new YellowJacket19_2(hwMap, "LB");
 
-        //intake = new YellowJacket3_7(hwMap, "intake");
+        intake = new YellowJacket3_7(hwMap, "intake");
 
         //revIMU = new RevIMU(hwMap, "imu");
         //revIMU.init();
     }
-
-
 }
 
 
