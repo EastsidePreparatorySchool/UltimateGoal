@@ -89,9 +89,9 @@ public class Teleop_full extends LinearOpMode {
             //telemetry.addData("imu data", gyroAngle);
 
             if (gamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.8) {
-                robot.intake.set(-1);
-            } else if (gamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) < 0.2) {
-                robot.intake.set(0);
+                robot.intake.set(1);
+            }else{
+                robot.intake.stopMotor();
             }
             telemetry.addData("intake current", robot.intake.getCurrent());
             telemetry.update();

@@ -31,6 +31,11 @@ public class RobotHardware {
 
         intake = new YellowJacket3_7(hwMap, "intake");
 
+        leftFront.setInverted(true);
+        rightFront.setInverted(true);
+        rightBack.setInverted(true);
+        leftBack.setInverted(true);
+
         //revIMU = new RevIMU(hwMap, "imu");
         //revIMU.init();
     }
