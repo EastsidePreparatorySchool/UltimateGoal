@@ -8,19 +8,30 @@ public class ShooterAPI {
     //Public class members
     DcMotor ShooterMotor;
     //Constructor
-    public ShooterAPI(){}
+    public ShooterAPI(){
+
+    }
+
 
     public void init() {
         ShooterMotor = hardwareMap.get(DcMotor.class, "ShooterMotor" /*Whats the motors actual name?*/);
     }
     public void InitiateShooterMotor(boolean a){
-        //if I make this != static, in Shooter tester it will proceed to tell me that I should make it static, so which do I do
 
         if (a == true){
             this.ShooterMotor.setPower(10);
-        }if(a==false) {
-            this.ShooterMotor.setPower(0);
         }
+//        if(a==false) {
+//            this.ShooterMotor.setPower(0);
+//        }
+    }
+
+    public void ShootForTime(int time){
+        while(time != 0){
+            InitiateShooterMotor(true);
+            getring();
+        }
+        InitiateShooterMotor(false);
     }
     public static void getring(){
         //Not ready for production, to-do below:

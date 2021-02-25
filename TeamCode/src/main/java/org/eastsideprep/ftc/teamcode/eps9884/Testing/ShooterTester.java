@@ -11,12 +11,5 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
 
 public class ShooterTester {
 
-    public void ShootForTime(int time){
-        ShooterAPI shooterAPI = new ShooterAPI();
-        while(time != 0){
-            shooterAPI.InitiateShooterMotor(true);
-            shooterAPI.getring();
-        }
-        shooterAPI.InitiateShooterMotor(false);
-    }
+
 }
