@@ -3,10 +3,14 @@ package org.eastsideprep.ftc.teamcode.eps9884.API;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+/*To Do:
+*/
+
 
 public class ShooterAPI {
     //Public class members
-    DcMotor ShooterMotor;
+    DcMotor ShooterMotor1;
+    DcMotor ShooterMotor2;
     //Constructor
     public ShooterAPI(){
 
@@ -14,24 +18,21 @@ public class ShooterAPI {
 
 
     public void init() {
-        ShooterMotor = hardwareMap.get(DcMotor.class, "ShooterMotor" /*Whats the motors actual name?*/);
+        ShooterMotor1 = hardwareMap.get(DcMotor.class, "ShooterMotor1" /*Whats the motors actual name?*/);
+        ShooterMotor2 = hardwareMap.get(DcMotor.class, "ShooterMotor2" /*Whats the motors actual name?*/);
     }
-    public void InitiateShooterMotor(boolean a){
+    public void InitiateShooterMotor(int a){
 
-        if (a == true){
-            this.ShooterMotor.setPower(10);
-        }
-//        if(a==false) {
-//            this.ShooterMotor.setPower(0);
-//        }
+        this.ShooterMotor1.setPower(a);
+        this.ShooterMotor2.setPower(a);
     }
 
     public void ShootForTime(int time){
         while(time != 0){
-            InitiateShooterMotor(true);
+            InitiateShooterMotor(10);
             getring();
         }
-        InitiateShooterMotor(false);
+        InitiateShooterMotor(0);
     }
     public static void getring(){
         //Not ready for production, to-do below:
