@@ -3,11 +3,17 @@ package org.eastsideprep.ftc.teamcode.SKETCHYBOI;
 //This is the Hardware.java file for Robotics 2020-21 Ultimate Goal.
 //The robot's name is Sketchy Boi.
 
+import android.view.MotionEvent;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.eastsideprep.ftc.teamcode.SketchyLibrary.Chassis;
+import org.eastsideprep.ftc.teamcode.SketchyLibrary.Intake;
+import org.eastsideprep.ftc.teamcode.SketchyLibrary.Mechanism;
+import org.eastsideprep.ftc.teamcode.SketchyLibrary.MotorPower;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
@@ -19,6 +25,10 @@ public class SketchyHardware {
     public DcMotor [] allMotors;
     public DcMotor ShooterMotor = null;
     public DcMotor IntakeMotor = null;
+
+    public Chassis chassis;
+    public Intake intake;
+    public Intake shooter;
 
     public double IntakeSpeed = 1;
     public double ShooterSpeed = 1;
@@ -64,6 +74,33 @@ public class SketchyHardware {
             m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); //this is good for auto, but is it good for driver control?
         }
+
+        //if u want to use everests sketchy library
+        chassis = new Chassis(
+                hwMap,
+                "FrontLeftMotor",
+                "FrontRightMotor",
+                "BackLeftMotor",
+                "BackRightMotor"
+        );
+        chassis.setDirections(
+                DcMotor.Direction.FORWARD,
+                DcMotor.Direction.REVERSE,
+                DcMotor.Direction.FORWARD,
+                DcMotor.Direction.REVERSE
+        );
+        chassis.setModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        chassis.setModes(DcMotor.RunMode.RUN_USING_ENCODER);
+        chassis.setZeroPowerBehaviors(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        intake = new Intake(
+                new MotorPower(hwMap.dcMotor.get("IntakeMotor"), 1)
+        );
+
+        shooter = new Intake(
+                new MotorPower(hwMap.dcMotor.get("ShooterMotor"), 1)
+        );
+
     }
 
     public double[] getDrivePowersFromAngle(double angle) {
