@@ -8,12 +8,12 @@ import android.view.MotionEvent;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.eastsideprep.ftc.teamcode.SketchyLibrary.Chassis;
-import org.eastsideprep.ftc.teamcode.SketchyLibrary.Intake;
-import org.eastsideprep.ftc.teamcode.SketchyLibrary.Mechanism;
-import org.eastsideprep.ftc.teamcode.SketchyLibrary.MotorPower;
+import org.eastsideprep.ftc.teamcode.EOLibrary.Chassis;
+import org.eastsideprep.ftc.teamcode.EOLibrary.Intake;
+import org.eastsideprep.ftc.teamcode.EOLibrary.MotorPower;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
@@ -25,6 +25,8 @@ public class SketchyHardware {
     public DcMotor [] allMotors;
     public DcMotor ShooterMotor = null;
     public DcMotor IntakeMotor = null;
+
+    public Servo RingPushServo = null;
 
     public Chassis chassis;
     public Intake intake;
@@ -56,6 +58,8 @@ public class SketchyHardware {
 
         ShooterMotor = hwMap.dcMotor.get("ShooterMotor");
         IntakeMotor = hwMap.dcMotor.get("IntakeMotor");
+
+        RingPushServo = hwMap.servo.get("RingPushServo");
 
         allMotors = new DcMotor[] {
                 FrontLeftMotor, FrontRightMotor, BackLeftMotor, BackRightMotor

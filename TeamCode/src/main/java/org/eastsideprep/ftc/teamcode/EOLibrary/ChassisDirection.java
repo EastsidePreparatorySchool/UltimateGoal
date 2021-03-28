@@ -1,4 +1,4 @@
-package org.eastsideprep.ftc.teamcode.SketchyLibrary;
+package org.eastsideprep.ftc.teamcode.EOLibrary;
 
 public class ChassisDirection {
     private int id;

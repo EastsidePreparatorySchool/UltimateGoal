@@ -1,4 +1,4 @@
-package org.eastsideprep.ftc.teamcode.SketchyLibrary;
+package org.eastsideprep.ftc.teamcode.EOLibrary;
 
 public class Grabber {
     //I previously had this class take 2 servos and 4 integers but then I realized that just taking 2
