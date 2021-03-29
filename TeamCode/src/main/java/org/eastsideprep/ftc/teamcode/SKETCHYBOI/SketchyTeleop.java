@@ -90,8 +90,10 @@ public class SketchyTeleop extends LinearOpMode {
             }
 
 
-
+            sleep(40);
         }
+
+
     }
 
 }

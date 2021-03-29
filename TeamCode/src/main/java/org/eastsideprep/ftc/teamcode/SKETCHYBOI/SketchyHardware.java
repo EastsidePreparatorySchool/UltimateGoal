@@ -12,7 +12,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.eastsideprep.ftc.teamcode.EOLibrary.Chassis;
+import org.eastsideprep.ftc.teamcode.EOLibrary.Grabber;
 import org.eastsideprep.ftc.teamcode.EOLibrary.Intake;
+import org.eastsideprep.ftc.teamcode.EOLibrary.Mechanism;
 import org.eastsideprep.ftc.teamcode.EOLibrary.MotorPower;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -28,9 +30,10 @@ public class SketchyHardware {
 
     public Servo RingPushServo = null;
 
-    public Chassis chassis;
-    public Intake intake;
-    public Intake shooter;
+//    public Chassis chassis;
+//    public Intake intake;
+//    public Intake shooter;
+//    public Mechanism ringPusher;
 
     public double IntakeSpeed = 1;
     public double ShooterSpeed = 1;
@@ -80,30 +83,32 @@ public class SketchyHardware {
         }
 
         //if u want to use everests sketchy library
-        chassis = new Chassis(
-                hwMap,
-                "FrontLeftMotor",
-                "FrontRightMotor",
-                "BackLeftMotor",
-                "BackRightMotor"
-        );
-        chassis.setDirections(
-                DcMotor.Direction.FORWARD,
-                DcMotor.Direction.REVERSE,
-                DcMotor.Direction.FORWARD,
-                DcMotor.Direction.REVERSE
-        );
-        chassis.setModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        chassis.setModes(DcMotor.RunMode.RUN_USING_ENCODER);
-        chassis.setZeroPowerBehaviors(DcMotor.ZeroPowerBehavior.BRAKE);
+//        chassis = new Chassis(
+//                hwMap,
+//                "FrontLeftMotor",
+//                "FrontRightMotor",
+//                "BackLeftMotor",
+//                "BackRightMotor"
+//        );
+//        chassis.setDirections(
+//                DcMotor.Direction.FORWARD,
+//                DcMotor.Direction.REVERSE,
+//                DcMotor.Direction.FORWARD,
+//                DcMotor.Direction.REVERSE
+//        );
+//        chassis.setModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        chassis.setModes(DcMotor.RunMode.RUN_USING_ENCODER);
+//        chassis.setZeroPowerBehaviors(DcMotor.ZeroPowerBehavior.BRAKE);
+//
+//        intake = new Intake(
+//                new MotorPower(hwMap.dcMotor.get("IntakeMotor"), 1)
+//        );
+//
+//        shooter = new Intake(
+//                new MotorPower(hwMap.dcMotor.get("ShooterMotor"), 1)
+//        );
 
-        intake = new Intake(
-                new MotorPower(hwMap.dcMotor.get("IntakeMotor"), 1)
-        );
-
-        shooter = new Intake(
-                new MotorPower(hwMap.dcMotor.get("ShooterMotor"), 1)
-        );
+        //ringPusher = new Mechanism(hwmap, "RingPushServo", IDK, IDK);
 
     }
 
