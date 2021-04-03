@@ -1,9 +1,7 @@
 package org.eastsideprep.ftc.teamcode.SKETCHYBOI;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="Sketchy Boi Teleop", group="SKETCHYBOI")
@@ -35,11 +33,14 @@ public class SketchyTeleop extends LinearOpMode {
         double zl;
         double zr;
 
+        int tx = 0;
+        int ty = 0;
+
         boolean intakeState = true;
         boolean shooterState = true;
 
         double servoMax = 1;
-        double servoMin = 0.86;
+        double servoMin = 0.80; //less is further
 
         waitForStart();
 
@@ -84,24 +85,16 @@ public class SketchyTeleop extends LinearOpMode {
                 robot.allDrive(0.0, 0);
             }
 
-            if(x){
+            if(x && tx > 4){
                 intakeState = !intakeState;
+                setIntake(intakeState);
+                tx = 0;
             }
 
-            if(y){
+            if(y && ty > 4){
                 shooterState = !shooterState;
-            }
-
-            if(intakeState){
-                robot.goIntake(1);
-            } else {
-                robot.stopIntake();
-            }
-
-            if(shooterState){
-                robot.goShooter(1);
-            } else {
-                robot.stopShooter();
+                setShooter(shooterState);
+                tx = 0;
             }
 
             if(b){
@@ -113,11 +106,32 @@ public class SketchyTeleop extends LinearOpMode {
             telemetry.addData("intake state", intakeState);
             telemetry.addData("shooter state", shooterState);
             telemetry.addData("servo position", robot.RingPushServo.getPosition());
+            telemetry.addData("tx", tx);
+            telemetry.addData("ty", ty);
             telemetry.update();
+
+            tx = tx + 1;
+            ty = ty + 1;
             sleep(40);
         }
 
 
+    }
+
+    public void setIntake(boolean intakeState){
+        if(intakeState){
+            robot.goIntake(1);
+        } else {
+            robot.stopIntake();
+        }
+    }
+
+    public void setShooter(boolean shooterState){
+        if(shooterState){
+            robot.goShooter(1);
+        } else {
+            robot.stopShooter();
+        }
     }
 
 }
