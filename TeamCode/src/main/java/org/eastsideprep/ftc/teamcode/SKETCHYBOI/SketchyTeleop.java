@@ -35,6 +35,9 @@ public class SketchyTeleop extends LinearOpMode {
         double zl;
         double zr;
 
+        boolean intakeState = true;
+        boolean shooterState = true;
+
         waitForStart();
 
         while(opModeIsActive()) {
@@ -68,6 +71,7 @@ public class SketchyTeleop extends LinearOpMode {
             }
             // finally, do a little math and put them into the motors
 
+
             robot.FrontLeftMotor.setPower(Math.cos(dsAngle + Math.PI / 4) * dsWeight - rotPower * rotWeight);
             robot.BackRightMotor.setPower(Math.cos(dsAngle + Math.PI / 4) * dsWeight + rotPower * rotWeight);
             robot.FrontRightMotor.setPower(Math.cos(dsAngle - Math.PI / 4) * dsWeight + rotPower * rotWeight);
@@ -77,18 +81,33 @@ public class SketchyTeleop extends LinearOpMode {
                 robot.allDrive(0.0, 0);
             }
 
-            if(a) {
-                robot.goShooter(1);
-            } else {
-                robot.stopShooter();
+            if(x){
+                intakeState = !intakeState;
             }
 
-            if(b) {
+            if(y){
+                shooterState = !shooterState;
+            }
+
+            if(intakeState){
                 robot.goIntake(1);
             } else {
                 robot.stopIntake();
             }
 
+            if(shooterState){
+                robot.goShooter(1);
+            } else {
+                robot.stopShooter();
+            }
+
+            telemetry.addData("intake state", intakeState);
+            telemetry.addData("shooter state", shooterState);
+            telemetry.update();
+
+            if(a){
+                robot.RingPushServo.setPosition(robot.RingPushServo.getPosition() + 5);
+            }
 
             sleep(40);
         }

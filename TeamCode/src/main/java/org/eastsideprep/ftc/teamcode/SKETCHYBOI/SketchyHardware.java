@@ -70,10 +70,16 @@ public class SketchyHardware {
 
         rotationArray = new double[] {-1.0, 1.0, -1.0, 1.0};
 
-        BackLeftMotor.setDirection(DcMotor.Direction.REVERSE);
-        BackRightMotor.setDirection(DcMotor.Direction.FORWARD);
-        FrontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
-        FrontRightMotor.setDirection(DcMotor.Direction.FORWARD);
+        BackLeftMotor.setDirection(DcMotor.Direction.FORWARD);
+        BackRightMotor.setDirection(DcMotor.Direction.REVERSE);
+        FrontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
+        FrontRightMotor.setDirection(DcMotor.Direction.REVERSE);
+
+        ShooterMotor.setDirection(DcMotor.Direction.REVERSE); //change if the motor is going the wrong way
+        IntakeMotor.setDirection(DcMotor.Direction.REVERSE); //see above
+        ShooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        IntakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
 
         for (DcMotor m : allMotors) {
             m.setPower(0.0);
@@ -81,34 +87,6 @@ public class SketchyHardware {
             m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); //this is good for auto, but is it good for driver control?
         }
-
-        //if u want to use everests sketchy library
-//        chassis = new Chassis(
-//                hwMap,
-//                "FrontLeftMotor",
-//                "FrontRightMotor",
-//                "BackLeftMotor",
-//                "BackRightMotor"
-//        );
-//        chassis.setDirections(
-//                DcMotor.Direction.FORWARD,
-//                DcMotor.Direction.REVERSE,
-//                DcMotor.Direction.FORWARD,
-//                DcMotor.Direction.REVERSE
-//        );
-//        chassis.setModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        chassis.setModes(DcMotor.RunMode.RUN_USING_ENCODER);
-//        chassis.setZeroPowerBehaviors(DcMotor.ZeroPowerBehavior.BRAKE);
-//
-//        intake = new Intake(
-//                new MotorPower(hwMap.dcMotor.get("IntakeMotor"), 1)
-//        );
-//
-//        shooter = new Intake(
-//                new MotorPower(hwMap.dcMotor.get("ShooterMotor"), 1)
-//        );
-
-        //ringPusher = new Mechanism(hwmap, "RingPushServo", IDK, IDK);
 
     }
 
