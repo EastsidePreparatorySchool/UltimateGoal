@@ -3,20 +3,11 @@ package org.eastsideprep.ftc.teamcode.SKETCHYBOI;
 //This is the Hardware.java file for Robotics 2020-21 Ultimate Goal.
 //The robot's name is Sketchy Boi.
 
-import android.view.MotionEvent;
-
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.eastsideprep.ftc.teamcode.EOLibrary.Chassis;
-import org.eastsideprep.ftc.teamcode.EOLibrary.Grabber;
-import org.eastsideprep.ftc.teamcode.EOLibrary.Intake;
-import org.eastsideprep.ftc.teamcode.EOLibrary.Mechanism;
-import org.eastsideprep.ftc.teamcode.EOLibrary.MotorPower;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
 public class SketchyHardware {
@@ -27,6 +18,12 @@ public class SketchyHardware {
     public DcMotor [] allMotors;
     public DcMotor ShooterMotor = null;
     public DcMotor IntakeMotor = null;
+
+//    public YellowJacket19_2 FrontLeftMotorEx = null;
+//    public DcMotorEx FrontRightMotorEx = null;
+//    public DcMotorEx BackLeftMotorEx = null;
+//    public DcMotorEx BackRightMotorEx = null;
+//    public DcMotorEx [] allMotorsEx;
 
     public Servo RingPushServo = null;
 
@@ -59,6 +56,11 @@ public class SketchyHardware {
         BackLeftMotor = hwMap.dcMotor.get("BackLeftMotor");
         BackRightMotor = hwMap.dcMotor.get("BackRightMotor");
 
+        FrontLeftMotor = hwMap.get(DcMotorEx.class, "FrontLeftMotor");
+        FrontRightMotor = hwMap.get(DcMotorEx.class, "FrontRightMotor");
+        BackLeftMotor = hwMap.get(DcMotorEx.class, "BackLeftMotor");
+        BackRightMotor = hwMap.get(DcMotorEx.class, "BackRightMotor");
+
         ShooterMotor = hwMap.dcMotor.get("ShooterMotor");
         IntakeMotor = hwMap.dcMotor.get("IntakeMotor");
 
@@ -70,10 +72,14 @@ public class SketchyHardware {
 
         rotationArray = new double[] {-1.0, 1.0, -1.0, 1.0};
 
-        BackLeftMotor.setDirection(DcMotor.Direction.FORWARD);
-        BackRightMotor.setDirection(DcMotor.Direction.REVERSE);
-        FrontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
-        FrontRightMotor.setDirection(DcMotor.Direction.REVERSE);
+//        BackLeftMotor.setDirection(DcMotor.Direction.FORWARD);
+//        BackRightMotor.setDirection(DcMotor.Direction.REVERSE);
+//        FrontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
+//        FrontRightMotor.setDirection(DcMotor.Direction.REVERSE);
+        BackLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+        BackRightMotor.setDirection(DcMotor.Direction.FORWARD);
+        FrontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+        FrontRightMotor.setDirection(DcMotor.Direction.FORWARD);
 
         ShooterMotor.setDirection(DcMotor.Direction.REVERSE); //change if the motor is going the wrong way
         IntakeMotor.setDirection(DcMotor.Direction.REVERSE); //see above
