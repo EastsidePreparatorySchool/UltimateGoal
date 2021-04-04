@@ -94,6 +94,9 @@ public class Teleop_full extends LinearOpMode {
                 robot.intake.stopMotor();
             }
             telemetry.addData("intake current", robot.intake.getCurrent());
+
+            robot.intake.pidWrite(1);
+
             telemetry.update();
         }
     }
