@@ -31,6 +31,8 @@ package org.eastsideprep.ftc.teamcode.whitmer;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -75,7 +77,6 @@ public class cwTeleop extends LinearOpMode
             float x = gamepad1.left_stick_x;
             float y = -gamepad1.left_stick_y; // Negate to get +y forward.
             float rotation = gamepad1.right_stick_x;
-            float speedControl = 0.5f*(1.0f + gamepad1.left_trigger);
             double biggestControl = Math.sqrt(x*x+y*y);
             double biggestWithRotation = Math.sqrt(x*x+y*y+rotation*rotation);
 
@@ -93,8 +94,7 @@ public class cwTeleop extends LinearOpMode
             if (biggestWithRotation != 0.0) {
                 double scale = Math.sqrt(pow2);
                 for (int i = 0; i < robot.allMotors.length; i++) {
-                    robot.allMotors[i].setPower(
-                            powers[i]/scale*biggestWithRotation*speedControl);
+                    robot.allMotors[i].setPower(powers[i]/scale*biggestWithRotation);
                 }
             }
             else
@@ -117,6 +117,47 @@ public class cwTeleop extends LinearOpMode
             xPressed = gamepad1.x && !xLastState;
             xLastState = gamepad1.x;
 
+            if (aPressed)
+            {
+                robot.frontLeft.setPower(0.0);
+                robot.frontRight.setPower(0.0);
+                robot.waitForTick(500);
+                robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robot.resetTickPeriod();
+                robot.frontLeft.setPower(1.0);
+                robot.frontRight.setPower(1.0);
+                robot.waitForTick(5000);
+                robot.frontLeft.setPower(0.0);
+                robot.frontRight.setPower(0.0);
+                robot.waitForTick(500);
+            }
+
+            if (bPressed)
+            {
+                robot.frontLeft.setPower(0.0);
+                robot.frontRight.setPower(0.0);
+                robot.waitForTick(500);
+                robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robot.resetTickPeriod();
+                robot.frontLeft.setPower(1.0);
+                robot.frontRight.setPower(1.0);
+                robot.waitForTick(5000);
+                robot.frontLeft.setPower(0.0);
+                robot.frontRight.setPower(0.0);
+                robot.waitForTick(500);
+            }
+
+            MotorConfigurationType t = robot.frontLeft.getMotorType();
+
+            telemetry.addData("Motor","maxRPM %.2f RPM frac %.3f ticks %.2f",
+                    t.getMaxRPM(),t.getAchieveableMaxRPMFraction(),t.getTicksPerRev());
+
             int encoderA = robot.frontLeft.getCurrentPosition();
             int encoderB = robot.backLeft.getCurrentPosition();
             int encoderC = robot.frontRight.getCurrentPosition();
@@ -127,8 +168,6 @@ public class cwTeleop extends LinearOpMode
             telemetry.addData("Encoders","%6d %6d %6d %6d", encoderA,encoderB,encoderC,encoderD);
             telemetry.update();
 
-            // Pause for 40 mS each cycle = update 25 times a second.
-            //sleep(40);
             robot.waitForTick(40);
         }
     }
