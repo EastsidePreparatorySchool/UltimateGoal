@@ -3,8 +3,8 @@ package org.eastsideprep.ftc.teamcode.SKETCHYBOI;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="go forward and shoot rings (works)", group="SKETCHYBOI")
-public class Shoot3Auto extends LinearOpMode {
+@Autonomous(name="shoot rings then go collect more", group="SKETCHYBOI")
+public class Shoot3AndCollectAuto extends LinearOpMode {
 
     //declare opmode members
     SketchyHardware robot = new SketchyHardware();
