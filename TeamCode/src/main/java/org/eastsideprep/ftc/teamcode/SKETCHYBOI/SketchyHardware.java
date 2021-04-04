@@ -35,6 +35,9 @@ public class SketchyHardware {
     public double IntakeSpeed = 1;
     public double ShooterSpeed = 1;
 
+    public double servoMinPos = 0.8;
+    public double servoMaxPos = 1;
+
     double [] rotationArray;
 
     //Local opMode members.
@@ -183,6 +186,12 @@ public class SketchyHardware {
         BackLeftMotor.setPower(0.0);
         BackRightMotor.setPower(0.0);
 
+    }
+
+    public void pushRing() {
+        RingPushServo.setPosition(servoMinPos);
+        threadSleep(1000);
+        RingPushServo.setPosition(servoMaxPos);
     }
 
     /* FUNCTIONS THAT EVEREST WROTE THIS YEAR */

@@ -60,7 +60,7 @@ public class SketchyTeleopF extends LinearOpMode {
             zr = gamepad1.right_trigger;
 
             //Mr. Mein's Math
-            double dsAngle = Math.atan2(lX, lY);
+            double dsAngle = Math.atan2(lX, lY) - Math.PI / 2;
             double dsWeight = Math.sqrt(lX * lX + lY * lY);
             double rotPower = rX;
             double rotWeight = Math.abs(rX);

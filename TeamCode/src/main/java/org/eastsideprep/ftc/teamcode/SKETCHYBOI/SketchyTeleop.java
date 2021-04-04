@@ -39,9 +39,6 @@ public class SketchyTeleop extends LinearOpMode {
         boolean intakeState = true;
         boolean shooterState = true;
 
-        double servoMax = 1;
-        double servoMin = 0.80; //less is further
-
         waitForStart();
 
         while(opModeIsActive()) {
@@ -105,9 +102,9 @@ public class SketchyTeleop extends LinearOpMode {
             }
 
             if(b || zr > 0){
-                robot.RingPushServo.setPosition(servoMin);
+                robot.RingPushServo.setPosition(robot.servoMinPos);
             } else {
-                robot.RingPushServo.setPosition(servoMax);
+                robot.RingPushServo.setPosition(robot.servoMaxPos);
             }
 
             telemetry.addData("intake state", intakeState);
