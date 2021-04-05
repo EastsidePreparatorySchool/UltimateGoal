@@ -42,9 +42,9 @@ public class SketchyTeleopOG extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()) {
-            double lX = gamepad1.left_stick_x;
+            double lX = -gamepad1.left_stick_x;
             double lY = -gamepad1.left_stick_y;
-            double rX = gamepad1.right_stick_x;
+            double rX = -gamepad1.right_stick_x;
             double rY = gamepad1.right_stick_y;
 
             a = gamepad1.a;
@@ -132,7 +132,7 @@ public class SketchyTeleopOG extends LinearOpMode {
 
     public void setShooter(boolean shooterState){
         if(shooterState){
-            robot.goShooter(1);
+            robot.goShooter(.8);
         } else {
             robot.stopShooter();
         }

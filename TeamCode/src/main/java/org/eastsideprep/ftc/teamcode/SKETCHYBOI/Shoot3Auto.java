@@ -19,14 +19,15 @@ public class Shoot3Auto extends LinearOpMode {
 
         waitForStart();
 
-        robot.goShooter(0.85);
+        robot.goShooter(0.8);
         robot.allDrive(-1, 1200);
-        robot.turn(0.1, 200);
+        robot.turn(0.1, 100);
         sleep(2000);
-        for (int x = 0; x <= 10; x++) {
+        for (int x = 0; x <= 4 ; x++) {
             robot.pushRing();
             sleep(1000);
         }
+        robot.allDrive(-0.5, 800);
         //stuff u want to do goes here
     }
 
