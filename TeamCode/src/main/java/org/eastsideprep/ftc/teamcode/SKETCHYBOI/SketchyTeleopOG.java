@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="Sketchy Boi Teleop MESSING AROUND", group="SKETCHYBOI")
+@TeleOp(name="Sketchy Boi Teleop (Original)", group="SKETCHYBOI")
 
-public class SketchyTeleopF extends LinearOpMode {
+public class SketchyTeleopOG extends LinearOpMode {
     //Declare opmode members.
 
     SketchyHardware robot = new SketchyHardware();
@@ -39,9 +39,6 @@ public class SketchyTeleopF extends LinearOpMode {
         boolean intakeState = true;
         boolean shooterState = true;
 
-        double servoMax = 1;
-        double servoMin = 0.80; //less is further
-
         waitForStart();
 
         while(opModeIsActive()) {
@@ -60,7 +57,7 @@ public class SketchyTeleopF extends LinearOpMode {
             zr = gamepad1.right_trigger;
 
             //Mr. Mein's Math
-            double dsAngle = Math.atan2(lX, lY) - Math.PI / 2;
+            double dsAngle = Math.atan2(lX, lY);
             double dsWeight = Math.sqrt(lX * lX + lY * lY);
             double rotPower = rX;
             double rotWeight = Math.abs(rX);
@@ -71,11 +68,6 @@ public class SketchyTeleopF extends LinearOpMode {
             //robot.state.heading = dsAngle;
 
             //make sure values are not greater than 1
-
-            //FOR DEBUGING
-            rotPower = 0;
-            rotWeight = 0;
-
             if (dsWeight + rotWeight > 1.0) {
                 dsWeight /= dsWeight + rotWeight;
                 rotPower /= dsWeight + rotWeight;
@@ -105,9 +97,9 @@ public class SketchyTeleopF extends LinearOpMode {
             }
 
             if(b || zr > 0){
-                robot.RingPushServo.setPosition(servoMin);
+                robot.RingPushServo.setPosition(robot.servoMinPos);
             } else {
-                robot.RingPushServo.setPosition(servoMax);
+                robot.RingPushServo.setPosition(robot.servoMaxPos);
             }
 
             telemetry.addData("intake state", intakeState);
