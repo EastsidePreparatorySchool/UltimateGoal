@@ -19,10 +19,6 @@ public class SketchyTeleop extends LinearOpMode {
         telemetry.addData("Say", "ready");
 
         ElapsedTime runtime= new ElapsedTime();
-//        double lX;
-//        double lY;
-//        double rX;
-//        double rY;
 
         boolean a;
         boolean b;

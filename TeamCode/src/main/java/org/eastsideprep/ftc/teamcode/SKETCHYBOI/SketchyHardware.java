@@ -18,12 +18,7 @@ public class SketchyHardware {
     public DcMotor [] allMotors;
     public DcMotor ShooterMotor = null;
     public DcMotor IntakeMotor = null;
-
-//    public YellowJacket19_2 FrontLeftMotorEx = null;
-//    public DcMotorEx FrontRightMotorEx = null;
-//    public DcMotorEx BackLeftMotorEx = null;
-//    public DcMotorEx BackRightMotorEx = null;
-//    public DcMotorEx [] allMotorsEx;
+//    public DcMotor IntakeMotor2 = null;
 
     public Servo RingPushServo = null;
 
@@ -66,6 +61,7 @@ public class SketchyHardware {
 
         ShooterMotor = hwMap.dcMotor.get("ShooterMotor");
         IntakeMotor = hwMap.dcMotor.get("IntakeMotor");
+//        IntakeMotor2 = hwMap.dcMotor.get("IntakeMotor2");
 
         RingPushServo = hwMap.servo.get("RingPushServo");
 
@@ -86,8 +82,11 @@ public class SketchyHardware {
 
         ShooterMotor.setDirection(DcMotor.Direction.REVERSE); //change if the motor is going the wrong way
         IntakeMotor.setDirection(DcMotor.Direction.REVERSE); //see above
+//        IntakeMotor2.setDirection(DcMotor.Direction.FORWARD);
+
         ShooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         IntakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+//        IntakeMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
 
         for (DcMotor m : allMotors) {
@@ -197,10 +196,11 @@ public class SketchyHardware {
     /* FUNCTIONS THAT EVEREST WROTE THIS YEAR */
     public void goIntake(double power){
         IntakeMotor.setPower(power);
+//        IntakeMotor2.setPower(1 * power); //75% Because Fino Said So
     }
 
     public void stopIntake(){
-        IntakeMotor.setPower(0);
+        goIntake(0);
     }
 
     public void goShooter(double power){
