@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="Sketchy Boi Teleop ORIGINAL [actually do use] {Jan's Version}", group="SKETCHYBOI")
+@TeleOp(name="Sketchy Boi Teleop ORIGINAL [actually do use] {Jake's Version}", group="SKETCHYBOI")
 
-public class SketchyTeleopOG extends LinearOpMode {
+public class SketchyTeleopJake extends LinearOpMode {
     //Declare opmode members.
 
     SketchyHardware robot = new SketchyHardware();
@@ -46,7 +46,7 @@ public class SketchyTeleopOG extends LinearOpMode {
 
         while(opModeIsActive()) {
             double lX = -gamepad1.left_stick_x;
-            double lY = -gamepad1.left_stick_y;
+            double lY = gamepad1.left_stick_y; //switch for jake
             double rX = -gamepad1.right_stick_x;
             double rY = gamepad1.right_stick_y;
 
