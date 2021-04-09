@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1087560776/FtcRobotController.iml" filepath="$PROJECT_DIR$/.idea/modules/-1087560776/FtcRobotController.iml" group="UltimateGoal/FtcRobotController" />
-      <module fileurl="file://$PROJECT_DIR$/TeamCode.iml" filepath="$PROJECT_DIR$/TeamCode.iml" group="UltimateGoal/TeamCode" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/938494280/UltimateGoal.iml" filepath="$PROJECT_DIR$/.idea/modules/938494280/UltimateGoal.iml" group="UltimateGoal" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/864658404/UltimateGoal.iml" filepath="$PROJECT_DIR$/.idea/modules/864658404/UltimateGoal.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/250620828/UltimateGoal.FtcRobotController.iml" filepath="$PROJECT_DIR$/.idea/modules/250620828/UltimateGoal.FtcRobotController.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/UltimateGoal.TeamCode.iml" filepath="$PROJECT_DIR$/.idea/modules/UltimateGoal.TeamCode.iml" />
     </modules>
   </component>
 </project>
