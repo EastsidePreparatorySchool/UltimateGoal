@@ -19,6 +19,8 @@ public class Shoot3Auto extends LinearOpMode {
 
         waitForStart();
 
+        robot.turn(-0.1, 10); //turn so it's at the right direction and we don't have to do the twerk thing
+
         robot.goShooter(0.8);
         robot.allDrive(-1, 1200);
         robot.turn(0.1, 200);

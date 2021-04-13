@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="Sketchy Boi Teleop ORIGINAL [actually do use] {Jan's Version}", group="SKETCHYBOI")
+@TeleOp(name="Sketchy Boi Teleop ORIGINAL [actually do use]", group="SKETCHYBOI")
 
 public class SketchyTeleopOG extends LinearOpMode {
     //Declare opmode members.

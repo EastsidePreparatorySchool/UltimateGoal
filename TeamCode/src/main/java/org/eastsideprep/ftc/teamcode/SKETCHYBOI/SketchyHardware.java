@@ -9,6 +9,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import com.arcrobotics.ftclib.hardware.RevIMU;
+
+import org.eastsideprep.ftc.teamcode.TrajanStuff412.YellowJacket19_2;
+
+import org.eastsideprep.ftc.teamcode.TrajanStuff412.util.*;
 
 public class SketchyHardware {
     public DcMotor FrontLeftMotor = null;
@@ -18,14 +23,22 @@ public class SketchyHardware {
     public DcMotor [] allMotors;
     public DcMotor ShooterMotor = null;
     public DcMotor IntakeMotor = null;
-//    public DcMotor IntakeMotor2 = null;
+//
+//    public YellowJacket19_2 FrontLeftMotorYJ = null;
+//    public YellowJacket19_2 FrontRightMotorYJ = null;
+//    public YellowJacket19_2 BackLeftMotorYJ = null;
+//    public YellowJacket19_2 BackRightMotorYJ = null;
+//    public YellowJacket19_2 [] allMotorsYJ;
+//    public YellowJacket19_2 ShooterMotorYJ = null;
+//    public YellowJacket19_2 IntakeMotorYJ = null;
+
+    public Encoder LeftEncoder = null;
+    public Encoder RightEncoder = null;
+    public Encoder FrontEncoder = null;
 
     public Servo RingPushServo = null;
 
-//    public Chassis chassis;
-//    public Intake intake;
-//    public Intake shooter;
-//    public Mechanism ringPusher;
+    public RevIMU IMU = null;
 
     public double IntakeSpeed = 1;
     public double ShooterSpeed = 1;
@@ -53,15 +66,21 @@ public class SketchyHardware {
         FrontRightMotor = hwMap.dcMotor.get("FrontRightMotor");
         BackLeftMotor = hwMap.dcMotor.get("BackLeftMotor");
         BackRightMotor = hwMap.dcMotor.get("BackRightMotor");
+//
+//        FrontLeftMotorYJ = new YellowJacket19_2(hwMap, "FrontLeftMotor");
+//        FrontRightMotorYJ = new YellowJacket19_2(hwMap, "FrontRightMotor");
+//        BackLeftMotorYJ = new YellowJacket19_2(hwMap, "BackLeftMotor");
+//        BackRightMotorYJ = new YellowJacket19_2(hwMap, "BackRightMotor");
 
-        FrontLeftMotor = hwMap.get(DcMotorEx.class, "FrontLeftMotor");
-        FrontRightMotor = hwMap.get(DcMotorEx.class, "FrontRightMotor");
-        BackLeftMotor = hwMap.get(DcMotorEx.class, "BackLeftMotor");
-        BackRightMotor = hwMap.get(DcMotorEx.class, "BackRightMotor");
+//        LeftEncoder = new Encoder(hwMap.get(DcMotorEx.class, "FrontLeftMotor"));
+//        RightEncoder = new Encoder(hwMap.get(DcMotorEx.class, "FrontRightMotor"));
+//        FrontEncoder = new Encoder(hwMap.get(DcMotorEx.class, "BackLeftMotor"));
 
         ShooterMotor = hwMap.dcMotor.get("ShooterMotor");
         IntakeMotor = hwMap.dcMotor.get("IntakeMotor");
-//        IntakeMotor2 = hwMap.dcMotor.get("IntakeMotor2");
+
+//        ShooterMotorYJ = new YellowJacket19_2(hwMap, "ShooterMotor");
+//        IntakeMotorYJ = new YellowJacket19_2(hwMap, "IntakeMotor");
 
         RingPushServo = hwMap.servo.get("RingPushServo");
 
