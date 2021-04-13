@@ -31,10 +31,10 @@ public class SketchyHardware {
 //    public YellowJacket19_2 [] allMotorsYJ;
 //    public YellowJacket19_2 ShooterMotorYJ = null;
 //    public YellowJacket19_2 IntakeMotorYJ = null;
-
-    public Encoder LeftEncoder = null;
-    public Encoder RightEncoder = null;
-    public Encoder FrontEncoder = null;
+//
+//    public Encoder LeftEncoder = null;
+//    public Encoder RightEncoder = null;
+//    public Encoder FrontEncoder = null;
 
     public Servo RingPushServo = null;
 
