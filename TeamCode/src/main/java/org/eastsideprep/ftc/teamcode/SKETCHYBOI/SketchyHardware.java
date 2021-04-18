@@ -17,7 +17,9 @@ public class SketchyHardware {
     public DcMotor BackRightMotor = null;
     public DcMotor [] allMotors;
     public DcMotor ShooterMotor = null;
-    public DcMotor IntakeMotor = null;
+    public DcMotor FrontIntakeMotor = null;
+    public DcMotor IntakeMotor1 = null;
+    public DcMotor IntakeMotor2 = null;
 //    public DcMotor IntakeMotor2 = null;
 
     public Servo RingPushServo = null;
@@ -60,7 +62,9 @@ public class SketchyHardware {
         BackRightMotor = hwMap.get(DcMotorEx.class, "BackRightMotor");
 
         ShooterMotor = hwMap.dcMotor.get("ShooterMotor");
-        IntakeMotor = hwMap.dcMotor.get("IntakeMotor");
+        FrontIntakeMotor = hwMap.dcMotor.get("FrontIntakeMotor");
+        IntakeMotor1 = hwMap.dcMotor.get("IntakeMotor1");
+        IntakeMotor2 = hwMap.dcMotor.get("IntakeMotor2");
 //        IntakeMotor2 = hwMap.dcMotor.get("IntakeMotor2");
 
         RingPushServo = hwMap.servo.get("RingPushServo");
@@ -81,11 +85,15 @@ public class SketchyHardware {
         FrontRightMotor.setDirection(DcMotor.Direction.FORWARD);
 
         ShooterMotor.setDirection(DcMotor.Direction.REVERSE); //change if the motor is going the wrong way
-        IntakeMotor.setDirection(DcMotor.Direction.REVERSE); //see above
-//        IntakeMotor2.setDirection(DcMotor.Direction.FORWARD);
+        FrontIntakeMotor.setDirection(DcMotor.Direction.REVERSE); //see above
+        IntakeMotor1.setDirection(DcMotor.Direction.REVERSE);
+        IntakeMotor2.setDirection(DcMotor.Direction.REVERSE);
+        //        IntakeMotor2.setDirection(DcMotor.Direction.FORWARD);
 
         ShooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        IntakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        FrontIntakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        IntakeMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        IntakeMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 //        IntakeMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
 
@@ -195,7 +203,9 @@ public class SketchyHardware {
 
     /* FUNCTIONS THAT EVEREST WROTE THIS YEAR */
     public void goIntake(double power){
-        IntakeMotor.setPower(power);
+        FrontIntakeMotor.setPower(power);
+        IntakeMotor1.setPower(power);
+        IntakeMotor2.setPower(power);
 //        IntakeMotor2.setPower(1 * power); //75% Because Fino Said So
     }
 
