@@ -23,18 +23,26 @@ public class ServoTestTeleop extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()) {
-            robot.ArmServo70.setPosition(servoPos);
+            
+//            if(gamepad1.a){
+//                robot.ArmServo70.setPosition(0);
+//            }
 
-            if(gamepad1.left_trigger > 0){
-                servoPos = servoPos - 0.01;
+            if(gamepad1.y){
+                robot.ArmServo70.setPosition(0.01);
             }
 
-            if(gamepad1.right_trigger > 0){
-                servoPos = servoPos + 0.01;
+            else if(gamepad1.b){
+                robot.ArmServo70.setPosition(0.8);
             }
 
-            telemetry.addData("servoPos", servoPos);
+            else if(gamepad1.x){
+                robot.ArmServo70.setPosition(gamepad1.left_trigger);
+            }
+
+            telemetry.addData("servo position", robot.ArmServo70.getPosition());
             telemetry.update();
+
             sleep(40);
 
         }
