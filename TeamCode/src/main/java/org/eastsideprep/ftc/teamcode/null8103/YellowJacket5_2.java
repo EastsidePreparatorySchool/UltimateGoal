@@ -2,17 +2,22 @@ package org.eastsideprep.ftc.teamcode.null8103;
 
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class YellowJacket19_2 implements Motor {
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+
+public class YellowJacket5_2 implements Motor {
 
     private DcMotor m_motor;
+    public DcMotorEx motorEx;
     private double resetVal;
 
-    public static final double TICKS_PER_REV = 537.7;
+    public static final double TICKS_PER_REV = 145.1;
 
-    public YellowJacket19_2(HardwareMap hMap, String name) {
+    public YellowJacket5_2(HardwareMap hMap, String name) {
         m_motor = hMap.get(DcMotor.class, name);
+        motorEx = (DcMotorEx) m_motor;
     }
 
     @Override
@@ -67,4 +72,7 @@ public class YellowJacket19_2 implements Motor {
         return getEncoderCount() / TICKS_PER_REV;
     }
 
+    public double getCurrent() {
+        return motorEx.getCurrent(CurrentUnit.MILLIAMPS);
+    }
 }

@@ -75,11 +75,7 @@ public class Teleop_full extends LinearOpMode {
         boolean isIntakeOn = false;
 
         while (opModeIsActive()) {
-//            if (gamepad.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
-//                speedControl = 0.4;
-//            } else {
-//                speedControl = 1;
-//            }
+
             xSpeed = ether(gamepad.getLeftX(), driveGain);
             ySpeed = ether(gamepad.getLeftY(), driveGain);
             turnSpeed = ether(gamepad.getRightX(), turnGain);
@@ -88,23 +84,85 @@ public class Teleop_full extends LinearOpMode {
             //mecanumDrive.driveFieldCentric(xSpeed, ySpeed, turnSpeed, gyroAngle, true);//squaring inputs is more precise
             //telemetry.addData("imu data", gyroAngle);
 
-            if (gamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.8) {
-                robot.intake.set(1);
-            }else{
-                robot.intake.stopMotor();
+            if (gamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.8) {
+                runIntake(1);
+            } else if (gamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) < 0.8) {
+                runIntake(0);
             }
-            telemetry.addData("intake current", robot.intake.getCurrent());
 
-            robot.intake.pidWrite(1);
+            if (gamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.8) {
+                runShooterSequence();
+            }
+
+            if (gamepad.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
+                getWobble();
+            }
+
+            if (gamepad.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
+                releaseWobble();
+            }
+
+            //telemetry.addData("intake current", robot.front_intake.getCurrent());
 
             telemetry.update();
         }
     }
 
     //see graph at https://www.desmos.com/calculator/dx7yql2ekh
-    public static double ether(double x, double p) {
+    public double ether(double x, double p) {
         double min = 0.2; //this means that very small joystick movements give enough power to overcome friction
         return Math.min(min + (1 - min) * (p * Math.pow(x, 3) + (1 - p) * x), 1);//max power is 1
+    }
+
+    public void runIntake(double p) {
+        robot.front_intake.set(p);
+        robot.top_intake1.set(p);
+        robot.top_intake2.set(p);
+    }
+
+    public void runShooterSequence() {
+        telemetry.addData("log", "starting shooter sequence");
+        robot.shooter.pidWrite(0.95);
+        robot.RingPushServo.setPosition(0);
+        sleep(100);
+        robot.RingPushServo.setPosition(0.8);
+
+        sleep(100);
+        robot.RingPushServo.setPosition(0);
+        sleep(100);
+        robot.RingPushServo.setPosition(0.8);
+
+        sleep(100);
+        robot.RingPushServo.setPosition(0);
+
+        robot.shooter.pidWrite(0);
+        telemetry.addData("log", "finished shooter sequence");
+    }
+
+    double wobblePivotLow = 0;
+    double wobblePivotHigh = 1;
+    double wobbleGrabberClosed = 1;
+    double wobbleGrabberOpen = 0.2;
+
+    public void getWobble() {
+        telemetry.addData("log", "starting get wobble sequence");
+        robot.wobblePivot.setPosition(wobblePivotLow);
+        robot.wobbleGrabber.setPosition(wobbleGrabberOpen);
+        sleep(1000);
+        robot.wobbleGrabber.setPosition(wobbleGrabberClosed);
+        sleep(1000);
+        robot.wobblePivot.setPosition(wobblePivotHigh);
+        telemetry.addData("log", "ending get wobble sequence");
+    }
+
+    public void releaseWobble() {
+        telemetry.addData("log", "starting release wobble sequence");
+        robot.wobblePivot.setPosition(wobblePivotLow);
+        sleep(1000);
+        robot.wobbleGrabber.setPosition(wobbleGrabberOpen);
+        sleep(1000);
+        robot.wobblePivot.setPosition(wobblePivotHigh);
+        telemetry.addData("log", "ending release wobble sequence");
     }
 }
 
