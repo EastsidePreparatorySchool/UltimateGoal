@@ -29,6 +29,9 @@ public class SketchyHardware {
 
     public Servo RingPushServo = null;
 
+    public Servo ArmServo70 = null;
+    public Servo GrabberServo = null;
+
     public RevIMU IMU = null;
 
     public double IntakeSpeed = 1;
@@ -75,6 +78,9 @@ public class SketchyHardware {
 
         RingPushServo = hwMap.servo.get("RingPushServo");
 
+        ArmServo70 = hwMap.servo.get("WobblePivotServo");
+        GrabberServo = hwMap.servo.get("WobbleGrabberServo");
+
         allMotors = new DcMotor[] {
                 FrontLeftMotor, FrontRightMotor, BackLeftMotor, BackRightMotor
         };
@@ -105,8 +111,8 @@ public class SketchyHardware {
 
         for (DcMotor m : allMotors) {
             m.setPower(0.0);
-            m.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            m.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); //this is good for auto, but is it good for driver control?
         }
 

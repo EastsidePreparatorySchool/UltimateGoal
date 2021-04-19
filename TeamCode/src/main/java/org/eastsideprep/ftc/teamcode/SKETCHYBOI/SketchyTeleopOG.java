@@ -65,7 +65,7 @@ public class SketchyTeleopOG extends LinearOpMode {
             double rotPower = rX;
             double rotWeight = Math.abs(rX);
 
-            rotPower = rotPower * 0.6;
+//            rotPower = rotPower * 0.6;
 
             //dsAngle -= robot.state.orientation;
             //robot.state.heading = dsAngle;
@@ -84,7 +84,10 @@ public class SketchyTeleopOG extends LinearOpMode {
             robot.BackLeftMotor.setPower(Math.cos(dsAngle - Math.PI / 4) * dsWeight - rotPower * rotWeight);
 
             if(rX == 0 && rY == 0 && lX == 0 && lY == 0){
-                robot.allDrive(0.0, 0);
+                robot.FrontLeftMotor.setPower(0);
+                robot.BackRightMotor.setPower(0);
+                robot.FrontRightMotor.setPower(0);
+                robot.BackLeftMotor.setPower(0);
             }
 
             if(x && tx > 4){
