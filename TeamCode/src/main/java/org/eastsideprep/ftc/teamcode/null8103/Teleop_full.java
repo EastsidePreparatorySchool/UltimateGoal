@@ -32,8 +32,11 @@ package org.eastsideprep.ftc.teamcode.null8103;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.util.Timing;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import java.util.concurrent.TimeUnit;
 
 
 @TeleOp(name = "Full teleop")
@@ -95,11 +98,11 @@ public class Teleop_full extends LinearOpMode {
             }
 
             if (gamepad.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
-                getWobble();
+                robot.lowerOpenWobble();
             }
 
             if (gamepad.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
-                releaseWobble();
+                robot.closeRaiseWobble();
             }
 
             //telemetry.addData("intake current", robot.front_intake.getCurrent());
@@ -120,49 +123,30 @@ public class Teleop_full extends LinearOpMode {
         robot.top_intake2.set(p);
     }
 
+    Timing.Timer shooterTimer = new Timing.Timer(800, TimeUnit.MILLISECONDS);
+
     public void runShooterSequence() {
         telemetry.addData("log", "starting shooter sequence");
-        robot.shooter.pidWrite(0.95);
-        robot.RingPushServo.setPosition(0);
-        sleep(100);
-        robot.RingPushServo.setPosition(0.8);
+        robot.shooter.set(0.95);
+        shooterTimer.start();
+        if (shooterTimer.done()) {
+            robot.RingPushServo.setPosition(0);
+            sleep(100);
+            robot.RingPushServo.setPosition(0.8);
 
-        sleep(100);
-        robot.RingPushServo.setPosition(0);
-        sleep(100);
-        robot.RingPushServo.setPosition(0.8);
+            sleep(100);
+            robot.RingPushServo.setPosition(0);
+            sleep(100);
+            robot.RingPushServo.setPosition(0.8);
 
-        sleep(100);
-        robot.RingPushServo.setPosition(0);
+            sleep(100);
+            robot.RingPushServo.setPosition(0);
 
-        robot.shooter.pidWrite(0);
+            robot.shooter.set(0);
+        }
         telemetry.addData("log", "finished shooter sequence");
     }
 
-    double wobblePivotLow = 0;
-    double wobblePivotHigh = 1;
-    double wobbleGrabberClosed = 1;
-    double wobbleGrabberOpen = 0.2;
 
-    public void getWobble() {
-        telemetry.addData("log", "starting get wobble sequence");
-        robot.wobblePivot.setPosition(wobblePivotLow);
-        robot.wobbleGrabber.setPosition(wobbleGrabberOpen);
-        sleep(1000);
-        robot.wobbleGrabber.setPosition(wobbleGrabberClosed);
-        sleep(1000);
-        robot.wobblePivot.setPosition(wobblePivotHigh);
-        telemetry.addData("log", "ending get wobble sequence");
-    }
-
-    public void releaseWobble() {
-        telemetry.addData("log", "starting release wobble sequence");
-        robot.wobblePivot.setPosition(wobblePivotLow);
-        sleep(1000);
-        robot.wobbleGrabber.setPosition(wobbleGrabberOpen);
-        sleep(1000);
-        robot.wobblePivot.setPosition(wobblePivotHigh);
-        telemetry.addData("log", "ending release wobble sequence");
-    }
 }
 

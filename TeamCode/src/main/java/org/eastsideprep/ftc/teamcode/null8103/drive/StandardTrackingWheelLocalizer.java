@@ -8,7 +8,6 @@ import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.eastsideprep.ftc.teamcode.null8103.YellowJacket19_2;
 import org.firstinspires.ftc.teamcode.util.Encoder;
 
 import java.util.Arrays;
