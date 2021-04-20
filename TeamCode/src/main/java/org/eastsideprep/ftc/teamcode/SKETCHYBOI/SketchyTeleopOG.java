@@ -41,8 +41,11 @@ public class SketchyTeleopOG extends LinearOpMode {
 
         waitForStart();
 
-        robot.goShooter(0.88);
-        robot.goIntake(1);
+        //robot.goShooter(0.88);
+        //robot.goIntake(1);
+        boolean wobbleDown = false;
+        boolean grabberOpen = false;
+
 
         while(opModeIsActive()) {
             double lX = -gamepad1.left_stick_x;
@@ -100,6 +103,28 @@ public class SketchyTeleopOG extends LinearOpMode {
                 shooterState = !shooterState;
                 setShooter(shooterState);
                 tx = 0;
+            }
+
+
+            if(gamepad1.left_bumper && !wobbleDown){
+                robot.ArmServo70.setPosition(0.3);
+                wobbleDown = true;
+                sleep(500);
+            } else if(gamepad1.left_bumper && wobbleDown){
+                robot.ArmServo70.setPosition(1);
+                wobbleDown = false;
+                sleep(500);
+            }
+
+
+            if(gamepad1.right_bumper && !grabberOpen){
+                robot.GrabberServo.setPosition(0.2);
+                grabberOpen = true;
+                sleep(500);
+            } else if(gamepad1.right_bumper && grabberOpen){
+                robot.GrabberServo.setPosition(1);
+                grabberOpen = false;
+                sleep(500);
             }
 
             if(b || zr > 0){
