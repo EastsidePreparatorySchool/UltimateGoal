@@ -232,4 +232,12 @@ public class SketchyHardware {
     public void stopShooter(){
         ShooterMotor.setPower(0);
     }
+
+    public void retractWobbleGoal() { ArmServo70.setPosition(0.01);}
+
+    public void extendWobbleGoal() { ArmServo70.setPosition(0.8);}
+
+    public void openClaw() { GrabberServo.setPosition(0.01); };
+
+    public void closeClaw() { GrabberServo.setPosition(0.85); };
 }
