@@ -46,6 +46,9 @@ public class SketchyTeleopOG extends LinearOpMode {
         boolean wobbleDown = false;
         boolean grabberOpen = false;
 
+        double driveFactor = 1;
+        boolean slowMode = false;
+
 
         while(opModeIsActive()) {
             double lX = -gamepad1.left_stick_x;
@@ -68,10 +71,7 @@ public class SketchyTeleopOG extends LinearOpMode {
             double rotPower = rX;
             double rotWeight = Math.abs(rX);
 
-//            rotPower = rotPower * 0.6;
 
-            //dsAngle -= robot.state.orientation;
-            //robot.state.heading = dsAngle;
 
             //make sure values are not greater than 1
             if (dsWeight + rotWeight > 1.0) {
@@ -81,16 +81,22 @@ public class SketchyTeleopOG extends LinearOpMode {
             // finally, do a little math and put them into the motors
 
 
-            robot.FrontLeftMotor.setPower(Math.cos(dsAngle + Math.PI / 4) * dsWeight - rotPower * rotWeight);
-            robot.BackRightMotor.setPower(Math.cos(dsAngle + Math.PI / 4) * dsWeight + rotPower * rotWeight);
-            robot.FrontRightMotor.setPower(Math.cos(dsAngle - Math.PI / 4) * dsWeight + rotPower * rotWeight);
-            robot.BackLeftMotor.setPower(Math.cos(dsAngle - Math.PI / 4) * dsWeight - rotPower * rotWeight);
+            robot.FrontLeftMotor.setPower(driveFactor*(Math.cos(dsAngle + Math.PI / 4) * dsWeight - rotPower * rotWeight));
+            robot.BackRightMotor.setPower(driveFactor*(Math.cos(dsAngle + Math.PI / 4) * dsWeight + rotPower * rotWeight));
+            robot.FrontRightMotor.setPower(driveFactor*(Math.cos(dsAngle - Math.PI / 4) * dsWeight + rotPower * rotWeight));
+            robot.BackLeftMotor.setPower(driveFactor*(Math.cos(dsAngle - Math.PI / 4) * dsWeight - rotPower * rotWeight));
 
             if(rX == 0 && rY == 0 && lX == 0 && lY == 0){
                 robot.FrontLeftMotor.setPower(0);
                 robot.BackRightMotor.setPower(0);
                 robot.FrontRightMotor.setPower(0);
                 robot.BackLeftMotor.setPower(0);
+            }
+
+            if (a && slowMode) {
+                driveFactor = 1;
+            } else if (a && !slowMode) {
+                driveFactor = 0.7;
             }
 
             if(x && tx > 4){
