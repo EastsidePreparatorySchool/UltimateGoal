@@ -39,10 +39,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.eastsideprep.ftc.teamcode.null8103.drive.SampleMecanumDrive;
 import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -50,6 +54,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Autonomous(name = "full auto")
@@ -75,7 +81,7 @@ public class Auto_full extends LinearOpMode {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         OpenCvInternalCamera phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
 
-        Auto_ring_detection.RingDetectorPipeline ringDetectorPipeline = new Auto_ring_detection.RingDetectorPipeline();
+        RingDetectorPipeline ringDetectorPipeline = new RingDetectorPipeline();
 
         phoneCam.setPipeline(ringDetectorPipeline);
         phoneCam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
@@ -213,5 +219,83 @@ public class Auto_full extends LinearOpMode {
         robot.leftBack.set(0);
         robot.rightFront.set(0);
 
+    }
+
+
+    class RingDetectorPipeline extends OpenCvPipeline {
+
+        int numRings = 0;
+        int CAMERA_WIDTH = 320;
+
+        //to tune:
+        Scalar lowerOrange = new Scalar(0.0, 141.0, 0.0);
+        Scalar upperOrange = new Scalar(255.0, 230.0, 95.0);
+
+        double HORIZON = 0.3 * CAMERA_WIDTH;
+        double MIN_WIDTH = 0.2 * CAMERA_WIDTH;
+
+        double BOUND_RATIO = 0.5;
+
+        Mat matYCrCb = new Mat();
+        Mat workingMat = new Mat();
+
+        @Override
+        public Mat processFrame(Mat input) {
+
+            workingMat.release();
+            workingMat = new Mat();
+            //matYCrCb.release();
+
+            Imgproc.cvtColor(input, matYCrCb, Imgproc.COLOR_RGB2YCrCb);
+
+            // variable to store mask in
+            Mat mask = new Mat(matYCrCb.rows(), matYCrCb.cols(), CvType.CV_8UC1);
+            Core.inRange(matYCrCb, lowerOrange, upperOrange, mask);
+
+            Core.bitwise_and(input, input, workingMat, mask);
+
+            Imgproc.GaussianBlur(mask, mask, new Size(5.0, 15.0), 0.00);
+
+            List<MatOfPoint> contours = new ArrayList<>();
+            Mat hierarchy = new Mat();
+            Imgproc.findContours(mask, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_NONE);
+
+            Imgproc.drawContours(workingMat, contours, -1, new Scalar(0.0, 255.0, 0.0), 3);
+
+            int maxWidth = 0;
+            Rect maxRect = new Rect();
+            for (MatOfPoint c : contours) {
+                MatOfPoint2f copy = new MatOfPoint2f(c.toArray());
+                Rect rect = Imgproc.boundingRect(copy);
+
+                int w = rect.width;
+                // checking if the rectangle is below the horizon
+                if (w > maxWidth && rect.y + rect.height > HORIZON) {
+                    maxWidth = w;
+                    maxRect = rect;
+                }
+                c.release(); // releasing the buffer of the contour, since after use, it is no longer needed
+                copy.release(); // releasing the buffer of the copy of the contour, since after use, it is no longer needed
+            }
+
+            double aspectRatio = (double) maxRect.height / maxRect.width;
+
+            telemetry.addData("log", "" + aspectRatio);
+
+            if (maxWidth >= MIN_WIDTH) {
+                if (aspectRatio > BOUND_RATIO) {
+                    numRings = 4;
+                } else {
+                    numRings = 1;
+                }
+            } else {
+                numRings = 0;
+            }
+            return workingMat;
+        }
+
+        int getResult() {
+            return numRings;
+        }
     }
 }

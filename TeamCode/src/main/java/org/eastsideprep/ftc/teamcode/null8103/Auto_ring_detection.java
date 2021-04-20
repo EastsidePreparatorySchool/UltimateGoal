@@ -32,6 +32,7 @@ package org.eastsideprep.ftc.teamcode.null8103;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.apache.commons.math3.util.IterationListener;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -81,7 +82,7 @@ public class Auto_ring_detection extends LinearOpMode {
 
     }
 
-    public static class RingDetectorPipeline extends OpenCvPipeline {
+    class RingDetectorPipeline extends OpenCvPipeline {
 
         int numRings = 0;
         int CAMERA_WIDTH = 320;
@@ -90,15 +91,20 @@ public class Auto_ring_detection extends LinearOpMode {
         Scalar lowerOrange = new Scalar(0.0, 141.0, 0.0);
         Scalar upperOrange = new Scalar(255.0, 230.0, 95.0);
 
-        double HORIZON = 0.35 * CAMERA_WIDTH;
-        double MIN_WIDTH = 0.16 * CAMERA_WIDTH;
+        double HORIZON = 0.3 * CAMERA_WIDTH;
+        double MIN_WIDTH = 0.2 * CAMERA_WIDTH;
 
-        double BOUND_RATIO = 0.7;
+        double BOUND_RATIO = 0.65;
+
+        Mat matYCrCb = new Mat();
+        Mat workingMat = new Mat();
 
         @Override
         public Mat processFrame(Mat input) {
 
-            Mat matYCrCb = new Mat();
+            workingMat.release();
+            workingMat = new Mat();
+            //matYCrCb.release();
 
             Imgproc.cvtColor(input, matYCrCb, Imgproc.COLOR_RGB2YCrCb);
 
@@ -106,11 +112,15 @@ public class Auto_ring_detection extends LinearOpMode {
             Mat mask = new Mat(matYCrCb.rows(), matYCrCb.cols(), CvType.CV_8UC1);
             Core.inRange(matYCrCb, lowerOrange, upperOrange, mask);
 
+            Core.bitwise_and(input, input, workingMat, mask);
+
             Imgproc.GaussianBlur(mask, mask, new Size(5.0, 15.0), 0.00);
 
             List<MatOfPoint> contours = new ArrayList<>();
             Mat hierarchy = new Mat();
             Imgproc.findContours(mask, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_NONE);
+
+            Imgproc.drawContours(workingMat, contours, -1, new Scalar(0.0, 255.0, 0.0), 3);
 
             int maxWidth = 0;
             Rect maxRect = new Rect();
@@ -128,9 +138,10 @@ public class Auto_ring_detection extends LinearOpMode {
                 copy.release(); // releasing the buffer of the copy of the contour, since after use, it is no longer needed
             }
 
-            double aspectRatio = (double) maxRect.height / maxRect.width;
+            double aspectRatio = (double) maxRect.width / maxRect.height;
 
-            // equivalent
+            //telemetry.addData("log", "" + aspectRatio);
+
             if (maxWidth >= MIN_WIDTH) {
                 if (aspectRatio > BOUND_RATIO) {
                     numRings = 4;
@@ -140,10 +151,10 @@ public class Auto_ring_detection extends LinearOpMode {
             } else {
                 numRings = 0;
             }
-            return mask;
+            return workingMat;
         }
 
-        int getResult(){
+        int getResult() {
             return numRings;
         }
     }
