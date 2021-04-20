@@ -66,7 +66,7 @@ public class Auto_ring_detection extends LinearOpMode {
         phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                phoneCam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
+                phoneCam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
             }
         });
 
@@ -92,9 +92,9 @@ public class Auto_ring_detection extends LinearOpMode {
         Scalar upperOrange = new Scalar(255.0, 230.0, 95.0);
 
         double HORIZON = 0.3 * CAMERA_WIDTH;
-        double MIN_WIDTH = 0.2 * CAMERA_WIDTH;
+        double MIN_WIDTH = 100;
 
-        double BOUND_RATIO = 0.65;
+        double BOUND_RATIO = 0.7;
 
         Mat matYCrCb = new Mat();
         Mat workingMat = new Mat();
@@ -138,9 +138,10 @@ public class Auto_ring_detection extends LinearOpMode {
                 copy.release(); // releasing the buffer of the copy of the contour, since after use, it is no longer needed
             }
 
-            double aspectRatio = (double) maxRect.width / maxRect.height;
+            double aspectRatio = (double) maxRect.height / maxRect.width;
 
-            //telemetry.addData("log", "" + aspectRatio);
+            //telemetry.addData("aspect", "" + aspectRatio);
+            //telemetry.addData("maxWidth", "" + maxWidth);
 
             if (maxWidth >= MIN_WIDTH) {
                 if (aspectRatio > BOUND_RATIO) {

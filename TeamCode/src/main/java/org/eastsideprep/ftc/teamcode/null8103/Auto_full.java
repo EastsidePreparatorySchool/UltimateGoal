@@ -234,7 +234,7 @@ public class Auto_full extends LinearOpMode {
         double HORIZON = 0.3 * CAMERA_WIDTH;
         double MIN_WIDTH = 0.2 * CAMERA_WIDTH;
 
-        double BOUND_RATIO = 0.5;
+        double BOUND_RATIO = 0.65;
 
         Mat matYCrCb = new Mat();
         Mat workingMat = new Mat();
@@ -260,7 +260,7 @@ public class Auto_full extends LinearOpMode {
             Mat hierarchy = new Mat();
             Imgproc.findContours(mask, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_NONE);
 
-            Imgproc.drawContours(workingMat, contours, -1, new Scalar(0.0, 255.0, 0.0), 3);
+            //Imgproc.drawContours(workingMat, contours, -1, new Scalar(0.0, 255.0, 0.0), 3);
 
             int maxWidth = 0;
             Rect maxRect = new Rect();
@@ -278,9 +278,9 @@ public class Auto_full extends LinearOpMode {
                 copy.release(); // releasing the buffer of the copy of the contour, since after use, it is no longer needed
             }
 
-            double aspectRatio = (double) maxRect.height / maxRect.width;
+            double aspectRatio = (double) maxRect.width / maxRect.height;
 
-            telemetry.addData("log", "" + aspectRatio);
+            //telemetry.addData("log", "" + aspectRatio);
 
             if (maxWidth >= MIN_WIDTH) {
                 if (aspectRatio > BOUND_RATIO) {
