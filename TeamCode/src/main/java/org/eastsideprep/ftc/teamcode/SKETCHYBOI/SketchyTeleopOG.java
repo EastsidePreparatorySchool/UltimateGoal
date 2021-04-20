@@ -123,6 +123,16 @@ public class SketchyTeleopOG extends LinearOpMode {
             tx = tx + 1;
             ty = ty + 1;
             sleep(40);
+
+            //Left bumber to extend, right bumper to retract.
+            if(r){ robot.retractWobbleGoal(); }
+            if(l){ robot.extendWobbleGoal(); }
+
+            if(zl > 0) {
+                robot.openClaw();
+            } else {
+                robot.closeClaw();
+            }
         }
 
 
