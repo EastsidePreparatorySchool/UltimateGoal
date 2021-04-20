@@ -120,7 +120,7 @@ public class Auto_ring_detection extends LinearOpMode {
             Mat hierarchy = new Mat();
             Imgproc.findContours(mask, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_NONE);
 
-            Imgproc.drawContours(workingMat, contours, -1, new Scalar(0.0, 255.0, 0.0), 3);
+            Imgproc.drawContours(workingMat, contours, -1, new Scalar(0.0, 255.0, 0.0), 4);
 
             int maxWidth = 0;
             Rect maxRect = new Rect();

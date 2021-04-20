@@ -96,7 +96,7 @@ public class Auto_full extends LinearOpMode {
 
         drive = new SampleMecanumDrive(hardwareMap);
 
-        Pose2d startPose = new Pose2d(-48, -24, Math.toRadians(90));
+        Pose2d startPose = new Pose2d(-60, -24, Math.toRadians(150));
 
         Pose2d goalShootingPose = new Pose2d(0, -36, Math.toRadians(210));
         Pose2d powerShootingPose = new Pose2d(0, -28, Math.toRadians(220));

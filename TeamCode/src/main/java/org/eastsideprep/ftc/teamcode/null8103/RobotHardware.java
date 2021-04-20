@@ -63,7 +63,7 @@ public class RobotHardware {
         shooter.setInverted(true);
 
         shooter.setRunMode(Motor.RunMode.VelocityControl);
-        shooter.setZeroPowerBehavior(Motor.ZeroPowerBehavior.FLOAT);
+        //shooter.setZeroPowerBehavior(Motor.ZeroPowerBehavior.FLOAT);
 
         //revIMU = new RevIMU(hwMap, "imu");
         //revIMU.init();
@@ -71,7 +71,7 @@ public class RobotHardware {
 
     //helpful functions for teleop and auto
 
-    double wobblePivotLow = 0;
+    double wobblePivotLow = 0.3;
     double wobblePivotHigh = 1;
     double wobbleGrabberClosed = 1;
     double wobbleGrabberOpen = 0.2;
