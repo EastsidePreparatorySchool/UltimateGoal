@@ -32,6 +32,9 @@ public class SketchyHardware {
     public Servo ArmServo70 = null;
     public Servo GrabberServo = null;
 
+    public Servo LeftRingBlockerServo = null;
+    public Servo RightRingBlockerServo = null;
+
     public RevIMU IMU = null;
 
     public double IntakeSpeed = 1;
@@ -80,6 +83,9 @@ public class SketchyHardware {
 
         ArmServo70 = hwMap.servo.get("WobblePivotServo");
         GrabberServo = hwMap.servo.get("WobbleGrabberServo");
+
+        LeftRingBlockerServo = hwMap.servo.get("LeftRingBlockerServo");
+        RightRingBlockerServo = hwMap.servo.get("RightRingBlockerServo");
 
         allMotors = new DcMotor[] {
                 FrontLeftMotor, FrontRightMotor, BackLeftMotor, BackRightMotor
@@ -233,11 +239,21 @@ public class SketchyHardware {
         ShooterMotor.setPower(0);
     }
 
-    public void retractWobbleGoal() { ArmServo70.setPosition(0.01);}
+    public void retractWobbleGoal() { ArmServo70.setPosition(1);}
 
-    public void extendWobbleGoal() { ArmServo70.setPosition(0.8);}
+    public void extendWobbleGoal() { ArmServo70.setPosition(0.3);}
 
-    public void openClaw() { GrabberServo.setPosition(0.01); };
+    public void openClaw() { GrabberServo.setPosition(0.2); };
 
-    public void closeClaw() { GrabberServo.setPosition(0.85); };
+    public void closeClaw() { GrabberServo.setPosition(1); };
+
+    public void extendRingBlockers() {
+        LeftRingBlockerServo.setPosition(0.9);
+        RightRingBlockerServo.setPosition(0);
+    };
+
+    public void retractRingBlockers() {
+        LeftRingBlockerServo.setPosition(0.5);
+        RightRingBlockerServo.setPosition(0.4);
+    }
 }

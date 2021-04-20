@@ -4,6 +4,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+//Controls:
+//  Left stick    ->    Drive
+//  Right stick   ->    Turn
+//  Right trigger ->    Shoot ring
+//  Left bumper   ->    Control arm
+//  Right bumper  ->    Control claw
+
 @TeleOp(name="Sketchy Boi Teleop ORIGINAL [actually do use]", group="SKETCHYBOI")
 
 public class SketchyTeleopOG extends LinearOpMode {
@@ -45,6 +52,7 @@ public class SketchyTeleopOG extends LinearOpMode {
         //robot.goIntake(1);
         boolean wobbleDown = false;
         boolean grabberOpen = false;
+        boolean blockersOpen = false;
 
         double driveFactor = 1;
         boolean slowMode = false;
@@ -124,12 +132,22 @@ public class SketchyTeleopOG extends LinearOpMode {
 
 
             if(gamepad1.right_bumper && !grabberOpen){
-                robot.GrabberServo.setPosition(0.2);
+                robot.openClaw();
                 grabberOpen = true;
                 sleep(500);
             } else if(gamepad1.right_bumper && grabberOpen){
-                robot.GrabberServo.setPosition(1);
+                robot.closeClaw();
                 grabberOpen = false;
+                sleep(500);
+            }
+
+            if(zl > 0 && !blockersOpen){
+                robot.extendRingBlockers();
+                blockersOpen = true;
+                sleep(500);
+            } else if(zl > 0 && blockersOpen){
+                robot.retractRingBlockers();
+                blockersOpen = false;
                 sleep(500);
             }
 
@@ -141,13 +159,17 @@ public class SketchyTeleopOG extends LinearOpMode {
 
             telemetry.addData("intake state", intakeState);
             telemetry.addData("shooter state", shooterState);
-            telemetry.addData("servo position", robot.RingPushServo.getPosition());
-            telemetry.addData("tx", tx);
-            telemetry.addData("ty", ty);
-            telemetry.addData("front left", robot.FrontLeftMotor.getPower());
-            telemetry.addData("front right", robot.FrontRightMotor.getPower());
-            telemetry.addData("back left", robot.BackLeftMotor.getPower());
-            telemetry.addData("back right", robot.BackRightMotor.getPower());
+//            telemetry.addData("servo position", robot.RingPushServo.getPosition());
+//            telemetry.addData("tx", tx);
+//            telemetry.addData("ty", ty);
+//            telemetry.addData("front left", robot.FrontLeftMotor.getPower());
+//            telemetry.addData("front right", robot.FrontRightMotor.getPower());
+//            telemetry.addData("back left", robot.BackLeftMotor.getPower());
+//            telemetry.addData("back right", robot.BackRightMotor.getPower());
+//            telemetry.addData("arm state", wobbleDown);
+//            telemetry.addData("arm pos", robot.ArmServo70.getPosition());
+            telemetry.addData("left blocker pos", robot.LeftRingBlockerServo.getPosition());
+            telemetry.addData("right blocker pos", robot.RightRingBlockerServo.getPosition());
 
             telemetry.update();
 
@@ -155,15 +177,6 @@ public class SketchyTeleopOG extends LinearOpMode {
             ty = ty + 1;
             sleep(40);
 
-            //Left bumber to extend, right bumper to retract.
-            if(r){ robot.retractWobbleGoal(); }
-            if(l){ robot.extendWobbleGoal(); }
-
-            if(zl > 0) {
-                robot.openClaw();
-            } else {
-                robot.closeClaw();
-            }
         }
 
 
