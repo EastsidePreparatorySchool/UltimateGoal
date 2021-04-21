@@ -103,8 +103,10 @@ public class SketchyTeleopOG extends LinearOpMode {
 
             if (a && slowMode) {
                 driveFactor = 1;
+                slowMode = true;
             } else if (a && !slowMode) {
                 driveFactor = 0.7;
+                slowMode = true;
             }
 
             if(x && tx > 4){
@@ -192,7 +194,7 @@ public class SketchyTeleopOG extends LinearOpMode {
 
     public void setShooter(boolean shooterState){
         if(shooterState){
-            robot.goShooter(.9);
+            robot.goShooter(.95);
         } else {
             robot.stopShooter();
         }
