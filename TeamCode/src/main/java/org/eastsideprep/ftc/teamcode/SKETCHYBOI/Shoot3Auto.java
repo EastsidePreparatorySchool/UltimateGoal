@@ -19,17 +19,19 @@ public class Shoot3Auto extends LinearOpMode {
 
         waitForStart();
 
-        robot.turn(-0.1, 10); //turn so it's at the right direction and we don't have to do the twerk thing
+//        robot.turn(-0.1, 10); //turn so it's at the right direction and we don't have to do the twerk thing
 
-        robot.goShooter(0.8);
-        robot.allDrive(-1, 1200);
-        robot.turn(0.1, 200);
+
+        robot.allDrive(-1, 1050);
+//        robot.turn(0.1, 200);
+        robot.goShooter(1);
+        sleep(4000);
+        robot.pushRing();
         sleep(2000);
-        for (int x = 0; x <= 4 ; x++) {
-            robot.pushRing();
-            sleep(1000);
-        }
-        robot.allDrive(-0.5, 450);
+        robot.pushRing();
+        sleep(1650);
+        robot.pushRing();
+        robot.allDrive(-0.9, 300);
         //stuff u want to do goes here
     }
 
