@@ -108,5 +108,7 @@ repositories {
         dirs rootProject.file('libs')
     }
     jcenter()
+
+    maven { url = 'https://maven.brott.dev/' }
 }
 apply from: 'build.release.gradle'

@@ -44,7 +44,6 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfPoint2f;
-import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
@@ -59,24 +58,51 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@Autonomous(name = "full auto")
+@Autonomous(name = "full FSM auto")
 
-public class Auto_full extends OpMode {
+public class Auto_full_fsm extends LinearOpMode {
+
+    enum State {
+        DRIVE_TO_VISION,
+        VISION, //detecting number of rings, not moving
+
+        INTAKING, //moving slowly, intake powered
+
+        DRIVE_TO_POWER, //driving to power shot shooting spot
+        DRIVE_TO_HIGH,
+        SHOOT_POWER, //shooting at power shots
+        SHOOT_HIGH, //shooting at high goal
+
+        DRIVE_TO_A, //driving to each wobble region
+        DRIVE_TO_B,
+        DRIVE_TO_C,
+        DRIVE_TO_2nd_WOBBLE,
+        RELEASE_WOBBLE, //servo movements
+        GRAB_WOBBLE,
+
+        DRIVE_TO_PARK,
+
+        IDLE //default and parked at the end
+    }
+
+    State currentState;
 
     RobotHardware robot;
     SampleMecanumDrive drive;
 
     //positions used in all paths:
-    Pose2d startPose, goalShootingPose, powerShootingPose, secondWobblePose, endPose;
+    Pose2d startPose, visionPose, endPose;
+    Pose2d intakeStartPose, intakeEndPose, highShootingPose, powerShootingPose;
+    Pose2d regionA1Pose, regionA2Pose, regionB1Pose, regionB2Pose, regionC1Pose, regionC2Pose, secondWobblePose;
 
-    //three trajectories, one of which will be built and followed
-    TrajectoryBuilder trajZero, TrajOne, TrajFour;
-
-    Trajectory chosenTraj;
-
+    Trajectory driveToVision;
+    Trajectory driveToA1, driveTo2ndWobbleA, driveToA2, driveToPowerA;
+    Trajectory driveToB1, driveTo2ndWobbleB, driveToB2, driveToPowerB;
+    Trajectory driveToC1, driveTo2ndWobbleC, driveToC2, driveToPowerC;
+    Trajectory driveAndIntake, driveToHigh, driveToEnd;
 
     @Override
-    public void init() {
+    public void runOpMode() throws InterruptedException {
 
         /* init steps:
         - init hardware
@@ -109,65 +135,118 @@ public class Auto_full extends OpMode {
 
         drive = new SampleMecanumDrive(hardwareMap);
 
-        startPose = new Pose2d(-60, -24, Math.toRadians(150));
+        startPose = new Pose2d(-60, -24, Math.toRadians(180));
 
-        goalShootingPose = new Pose2d(0, -36, Math.toRadians(210));
-        powerShootingPose = new Pose2d(0, -28, Math.toRadians(220));
+        visionPose = new Pose2d(-36, -24, Math.toRadians(140));
 
-        secondWobblePose = new Pose2d(-36, -48, Math.toRadians(180));
+        intakeStartPose = new Pose2d(-18, -32.5, Math.toRadians(-150));
+        intakeEndPose = new Pose2d(-30, -39.5, Math.toRadians(-150));
 
-        endPose = new Pose2d(12, -36, Math.toRadians(90));
+        highShootingPose = new Pose2d(0, -36, Math.toRadians(160));
+        powerShootingPose = new Pose2d(0, -28, Math.toRadians(170));
+
+        secondWobblePose = new Pose2d(-38, -48, Math.toRadians(-90));
+
+        regionA1Pose = new Pose2d(18, -66, Math.toRadians(30));
+        regionA2Pose = new Pose2d(14, -62, Math.toRadians(30));
+
+        regionB1Pose = new Pose2d(42, -42, Math.toRadians(-120));
+        regionB2Pose = new Pose2d(38, -38, Math.toRadians(-120));
+
+        regionC1Pose = new Pose2d(54, -66, Math.toRadians(-100));
+        regionC2Pose = new Pose2d(50, -62, Math.toRadians(-100));
+
+        endPose = new Pose2d(12, -24, Math.toRadians(90));
 
         drive.setPoseEstimate(startPose);
 
-        TrajectoryBuilder trajZero = drive.trajectoryBuilder(startPose)
-                .splineTo(powerShootingPose.vec(), powerShootingPose.getHeading())
-                .addDisplacementMarker(() -> {
+        driveToVision = drive.trajectoryBuilder(startPose)
+                .splineTo(visionPose.vec(), visionPose.getHeading())
+                .build();
 
-                })
-                .splineTo(new Vector2d(16, -64), 0)
-                .addDisplacementMarker(() -> {
-                    robot.lowerOpenWobble();
-                })
+
+        driveToA1 = drive.trajectoryBuilder(visionPose)
+                .splineTo(regionA1Pose.vec(), regionA1Pose.getHeading())
+                .build();
+        driveTo2ndWobbleA = drive.trajectoryBuilder(driveToA1.end())
                 .splineTo(secondWobblePose.vec(), secondWobblePose.getHeading())
-                .addDisplacementMarker(() -> {
-                    robot.closeRaiseWobble();
-                })
-                .splineTo(new Vector2d(18, -56), 0)
-                .addDisplacementMarker(() -> {
-                    robot.lowerOpenWobble();
-                })
-                .splineTo(endPose.vec(), endPose.getHeading())
-                .addDisplacementMarker(() -> {
-                    robot.closeRaiseWobble();
-                });
-
-        //1 ring -> goal B
-        //TODO: add spline to intake starter stack
-        TrajectoryBuilder trajOne = drive.trajectoryBuilder(startPose)
-                .splineTo(new Vector2d(-20, -20), Math.toRadians(-80))//dont hit the starter stack
+                .build();
+        driveToA2 = drive.trajectoryBuilder(driveTo2ndWobbleA.end())
+                .splineTo(regionA2Pose.vec(), regionA2Pose.getHeading())
+                .build();
+        driveToPowerA = drive.trajectoryBuilder(driveToA2.end())
                 .splineTo(powerShootingPose.vec(), powerShootingPose.getHeading())
-                .addDisplacementMarker(() -> {
-                    powerShotSequence();
-                })
-                .splineTo(new Vector2d(16, -64), 0)
-                .addDisplacementMarker(() -> {
-                    robot.lowerOpenWobble();
-                })
-                .splineTo(secondWobblePose.vec(), secondWobblePose.getHeading())
-                .addDisplacementMarker(() -> {
-                    robot.closeRaiseWobble();
-                })
-                .splineTo(new Vector2d(18, -56), 0)
-                .addDisplacementMarker(() -> {
-                    robot.lowerOpenWobble();
-                })
-                .splineTo(endPose.vec(), endPose.getHeading())
-                .addDisplacementMarker(() -> {
-                    robot.closeRaiseWobble();
-                });
+                .build();
 
-        TrajectoryBuilder trajFour = drive.trajectoryBuilder(startPose);
+
+        driveToB1 = drive.trajectoryBuilder(visionPose)
+                .splineTo(new Vector2d(-12, -12), Math.toRadians(-15))
+                .splineTo(regionB1Pose.vec(), regionB1Pose.getHeading())
+                .build();
+        driveTo2ndWobbleB = drive.trajectoryBuilder(driveToB1.end())
+                .splineTo(new Vector2d(0, -60), Math.toRadians(180))
+                .splineTo(secondWobblePose.vec(), secondWobblePose.getHeading())
+                .build();
+        driveToB2 = drive.trajectoryBuilder(driveTo2ndWobbleB.end())
+                .splineTo(new Vector2d(0, -60), Math.toRadians(180))
+                .splineTo(regionB2Pose.vec(), regionB2Pose.getHeading())
+                .build();
+        driveToPowerB = drive.trajectoryBuilder(driveToB2.end())
+                .splineTo(powerShootingPose.vec(), powerShootingPose.getHeading())
+                .build();
+
+
+        driveToC1 = drive.trajectoryBuilder(visionPose)
+                .splineTo(new Vector2d(-12, -12), Math.toRadians(-30))
+                .splineTo(regionC1Pose.vec(), regionC1Pose.getHeading())
+                .build();
+        driveTo2ndWobbleC = drive.trajectoryBuilder(driveToC1.end())
+                .splineTo(secondWobblePose.vec(), secondWobblePose.getHeading())
+                .build();
+        driveToC2 = drive.trajectoryBuilder(driveTo2ndWobbleC.end())
+                .splineTo(regionC2Pose.vec(), regionC2Pose.getHeading())
+                .build();
+        driveToPowerC = drive.trajectoryBuilder(driveToC2.end())
+                .splineTo(powerShootingPose.vec(), powerShootingPose.getHeading())
+                .build();
+
+        driveAndIntake = drive.trajectoryBuilder(powerShootingPose)
+                .splineTo(intakeStartPose.vec(), intakeStartPose.getHeading())
+                .addDisplacementMarker(() -> {
+                    robot.runIntake(1);
+                })
+                .splineTo(intakeEndPose.vec(), intakeEndPose.getHeading(),
+                        drive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),//why does this not workkk
+                        drive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .addDisplacementMarker(() -> {
+                    robot.stopIntake();
+                })
+                .build();
+
+        driveToHigh = drive.trajectoryBuilder(intakeEndPose)//this starting pose could be sus
+                .splineTo(highShootingPose.vec(), highShootingPose.getHeading())
+                .build();
+
+        driveToEnd = drive.trajectoryBuilder(driveToHigh.end())
+                .splineTo(endPose.vec(), endPose.getHeading())
+                .build();
+
+        currentState = State.IDLE;
+
+        switch (currentState) {
+            case DRIVE_TO_VISION:
+                if (!drive.isBusy()) {
+                    currentState = State.VISION;
+                    drive.followTrajectoryAsync(driveToVision);
+                }
+                break;
+        }
+
+        drive.update();
+    }
+
+    public void init() {
+
 
         int numRings = ringDetectorPipeline.getResult();
 
@@ -180,12 +259,6 @@ public class Auto_full extends OpMode {
         }
 
         drive.followTrajectoryAsync(chosenTraj);
-    }
-
-    @Override
-    public void loop() {
-
-        drive.update();
     }
 
     Timing.Timer powerShotTimer = new Timing.Timer(3500, TimeUnit.MILLISECONDS);
@@ -214,22 +287,6 @@ public class Auto_full extends OpMode {
             robot.shooter.set(0);
         }
     }
-
-    public void turnLeft(long time, double power) {
-        Timing.Timer timer = new Timing.Timer(time, TimeUnit.MILLISECONDS);
-        do {
-            robot.leftFront.set(-power);
-            robot.rightBack.set(power);
-            robot.leftBack.set(-power);
-            robot.rightFront.set(power);
-        } while (!timer.done());
-        robot.leftFront.set(0);
-        robot.rightBack.set(0);
-        robot.leftBack.set(0);
-        robot.rightFront.set(0);
-
-    }
-
 
     class RingDetectorPipeline extends OpenCvPipeline {
 

@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.hardware.motors.GoBILDA5202Series;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
@@ -63,13 +64,26 @@ public class RobotHardware {
         shooter.setInverted(true);
 
         shooter.setRunMode(Motor.RunMode.VelocityControl);
-        //shooter.setZeroPowerBehavior(Motor.ZeroPowerBehavior.FLOAT);
+        shooter.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        //shooter.setZeroPowerBehavior(Motor.ZeroPowerBehavior.FLOAT); //this throws an error bc there is a bug in ftclib
 
         //revIMU = new RevIMU(hwMap, "imu");
         //revIMU.init();
     }
 
     //helpful functions for teleop and auto
+
+    public void runIntake(double p){
+        front_intake.set(p);
+        top_intake1.set(p);
+        top_intake2.set(p);
+    }
+
+    public void stopIntake(){
+        front_intake.stopMotor();
+        top_intake1.stopMotor();
+        top_intake2.stopMotor();
+    }
 
     double wobblePivotLow = 0.3;
     double wobblePivotHigh = 1;
