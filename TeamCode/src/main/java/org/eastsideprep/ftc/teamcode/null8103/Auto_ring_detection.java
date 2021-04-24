@@ -52,6 +52,9 @@ public class Auto_ring_detection extends LinearOpMode {
     @Override
     public void runOpMode() {
 
+        telemetry.addData("log", "starting...");
+        telemetry.update();
+
         //these scary lines open the camera streaming
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
@@ -112,7 +115,7 @@ public class Auto_ring_detection extends LinearOpMode {
             Mat mask = new Mat(matYCrCb.rows(), matYCrCb.cols(), CvType.CV_8UC1);
             Core.inRange(matYCrCb, lowerOrange, upperOrange, mask);
 
-            Core.bitwise_and(input, input, workingMat, mask);
+            //Core.bitwise_and(input, input, workingMat, mask);
 
             Imgproc.GaussianBlur(mask, mask, new Size(5.0, 15.0), 0.00);
 
@@ -120,7 +123,9 @@ public class Auto_ring_detection extends LinearOpMode {
             Mat hierarchy = new Mat();
             Imgproc.findContours(mask, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_NONE);
 
-            Imgproc.drawContours(workingMat, contours, -1, new Scalar(0.0, 255.0, 0.0), 4);
+            Imgproc.line(workingMat, new Point(0, HORIZON), new Point(CAMERA_WIDTH, HORIZON), new Scalar(0, 255, 0), 3);
+
+            //Imgproc.drawContours(workingMat, contours, -1, new Scalar(0.0, 255.0, 0.0), 4);
 
             int maxWidth = 0;
             Rect maxRect = new Rect();

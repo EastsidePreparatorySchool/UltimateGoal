@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drive.opmode;
+package org.eastsideprep.ftc.teamcode.null8103.drive.opmode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -18,6 +18,10 @@ import org.eastsideprep.ftc.teamcode.null8103.drive.SampleMecanumDrive;
 
 import java.util.Objects;
 
+import static org.eastsideprep.ftc.teamcode.null8103.drive.DriveConstants.MAX_ACCEL;
+import static org.eastsideprep.ftc.teamcode.null8103.drive.DriveConstants.MAX_ANG_ACCEL;
+import static org.eastsideprep.ftc.teamcode.null8103.drive.DriveConstants.MAX_ANG_VEL;
+import static org.eastsideprep.ftc.teamcode.null8103.drive.DriveConstants.MAX_VEL;
 import static org.eastsideprep.ftc.teamcode.null8103.drive.DriveConstants.RUN_USING_ENCODER;
 import static org.eastsideprep.ftc.teamcode.null8103.drive.DriveConstants.kA;
 import static org.eastsideprep.ftc.teamcode.null8103.drive.DriveConstants.kStatic;
@@ -60,9 +64,9 @@ public class ManualFeedforwardTuner extends LinearOpMode {
         MotionState start = new MotionState(movingForward ? 0 : DISTANCE, 0, 0, 0);
         MotionState goal = new MotionState(movingForward ? DISTANCE : 0, 0, 0, 0);
         return MotionProfileGenerator.generateSimpleMotionProfile(start, goal,
-                DriveConstants.BASE_CONSTRAINTS.maxVel,
-                DriveConstants.BASE_CONSTRAINTS.maxAccel,
-                DriveConstants.BASE_CONSTRAINTS.maxJerk);
+                MAX_VEL,
+                MAX_ACCEL,
+                0);
     }
 
     @Override

@@ -66,19 +66,29 @@ public class Auto_full_fsm extends LinearOpMode {
         DRIVE_TO_VISION,
         VISION, //detecting number of rings, not moving
 
+        DRIVE_TO_A1, //each possible driving segment
+        DRIVE_TO_2nd_WOBBLE_A,
+        DRIVE_TO_A2,
+        DRIVE_TO_POWER_A,
+
+        DRIVE_TO_B1,
+        DRIVE_TO_2nd_WOBBLE_B,
+        DRIVE_TO_B2,
+        DRIVE_TO_POWER_B,
+
+        DRIVE_TO_C1,
+        DRIVE_TO_2nd_WOBBLE_C,
+        DRIVE_TO_C2,
+        DRIVE_TO_POWER_C,
+
+        RELEASE_WOBBLE, //servo movements
+        GRAB_WOBBLE,
+
         INTAKING, //moving slowly, intake powered
 
-        DRIVE_TO_POWER, //driving to power shot shooting spot
         DRIVE_TO_HIGH,
         SHOOT_POWER, //shooting at power shots
         SHOOT_HIGH, //shooting at high goal
-
-        DRIVE_TO_A, //driving to each wobble region
-        DRIVE_TO_B,
-        DRIVE_TO_C,
-        DRIVE_TO_2nd_WOBBLE,
-        RELEASE_WOBBLE, //servo movements
-        GRAB_WOBBLE,
 
         DRIVE_TO_PARK,
 
@@ -100,6 +110,8 @@ public class Auto_full_fsm extends LinearOpMode {
     Trajectory driveToB1, driveTo2ndWobbleB, driveToB2, driveToPowerB;
     Trajectory driveToC1, driveTo2ndWobbleC, driveToC2, driveToPowerC;
     Trajectory driveAndIntake, driveToHigh, driveToEnd;
+
+    int numRings = -1;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -215,9 +227,9 @@ public class Auto_full_fsm extends LinearOpMode {
                 .addDisplacementMarker(() -> {
                     robot.runIntake(1);
                 })
-                .splineTo(intakeEndPose.vec(), intakeEndPose.getHeading(),
-                        drive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),//why does this not workkk
-                        drive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .splineTo(intakeEndPose.vec(), intakeEndPose.getHeading())
+                //drive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),//why does this not workkk
+                //drive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .addDisplacementMarker(() -> {
                     robot.stopIntake();
                 })
@@ -233,33 +245,47 @@ public class Auto_full_fsm extends LinearOpMode {
 
         currentState = State.IDLE;
 
-        switch (currentState) {
-            case DRIVE_TO_VISION:
-                if (!drive.isBusy()) {
-                    currentState = State.VISION;
-                    drive.followTrajectoryAsync(driveToVision);
-                }
-                break;
-        }
+        while (opModeIsActive() && !isStopRequested()) {
 
-        drive.update();
+            switch (currentState) {
+                case DRIVE_TO_VISION:
+                    if (!drive.isBusy()) {
+                        currentState = State.VISION;
+                        drive.followTrajectoryAsync(driveToVision);
+                    }
+                    break;
+                case VISION:
+                    if (!drive.isBusy()) {
+                        numRings = ringDetectorPipeline.getResult();
+
+                        if (numRings == 0) {
+                            currentState = State.DRIVE_TO_A1;
+                        } else if (numRings == 1) {
+                            currentState = State.DRIVE_TO_B1;
+                        } else {
+                            currentState = State.DRIVE_TO_C1;
+                        }
+                    }
+                    break;
+                case DRIVE_TO_A1:
+                    if (!drive.isBusy()) {
+                        robot.lowerOpenWobble();
+                        drive.followTrajectoryAsync(driveTo2ndWobbleA);
+                        currentState = State.DRIVE_TO_2nd_WOBBLE_A;
+                    }
+                    break;
+                case DRIVE_TO_2nd_WOBBLE_A:
+                    if (!drive.isBusy()) {
+                        robot.closeRaiseWobble();
+                        drive.followTrajectoryAsync(driveToA2);
+                    }
+                    break;
+            }
+
+            drive.update();
+        }
     }
 
-    public void init() {
-
-
-        int numRings = ringDetectorPipeline.getResult();
-
-        if (numRings == 4) {
-            chosenTraj = trajFour.build();
-        } else if (numRings == 1) {
-            chosenTraj = trajOne.build();
-        } else {
-            chosenTraj = trajZero.build();
-        }
-
-        drive.followTrajectoryAsync(chosenTraj);
-    }
 
     Timing.Timer powerShotTimer = new Timing.Timer(3500, TimeUnit.MILLISECONDS);
     double pusherEnd = 0.75;
@@ -273,7 +299,7 @@ public class Auto_full_fsm extends LinearOpMode {
             robot.RingPushServo.setPosition(pusherEnd);//shoot first ring
         } else if (powerShotTimer.currentTime() > 2500) {
             robot.RingPushServo.setPosition(0);
-            turnLeft(750, 0.4);
+            //turnLeft(750, 0.4);
         } else if (powerShotTimer.currentTime() > 2750) {
             robot.RingPushServo.setPosition(pusherEnd);//shoot second ring
 
@@ -287,7 +313,7 @@ public class Auto_full_fsm extends LinearOpMode {
             robot.shooter.set(0);
         }
     }
-
+    //TODO: update this class
     class RingDetectorPipeline extends OpenCvPipeline {
 
         int numRings = 0;

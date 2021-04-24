@@ -3,11 +3,14 @@ package org.eastsideprep.ftc.teamcode.null8103;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.arcrobotics.ftclib.util.Timing;
 import com.qualcomm.hardware.motors.GoBILDA5202Series;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+
+import java.util.concurrent.TimeUnit;
 
 public class RobotHardware {
 
@@ -29,6 +32,9 @@ public class RobotHardware {
 
     public SimpleServo wobblePivot = null;
     public SimpleServo wobbleGrabber = null;
+
+    public SimpleServo leftSideArm = null;
+    public SimpleServo rightSideArm = null;
 
     RevIMU revIMU = null;
 
@@ -53,6 +59,8 @@ public class RobotHardware {
         wobblePivot = new SimpleServo(hwMap, "WobblePivotServo");
         wobbleGrabber = new SimpleServo(hwMap, "WobbleGrabberServo");
 
+
+
         leftFront.setInverted(true);
         rightFront.setInverted(true);
         rightBack.setInverted(true);
@@ -73,13 +81,13 @@ public class RobotHardware {
 
     //helpful functions for teleop and auto
 
-    public void runIntake(double p){
+    public void runIntake(double p) {
         front_intake.set(p);
         top_intake1.set(p);
         top_intake2.set(p);
     }
 
-    public void stopIntake(){
+    public void stopIntake() {
         front_intake.stopMotor();
         top_intake1.stopMotor();
         top_intake2.stopMotor();
@@ -91,13 +99,17 @@ public class RobotHardware {
     double wobbleGrabberOpen = 0.2;
 
     public void lowerOpenWobble() {
-        wobblePivot.setPosition(wobblePivotLow);
         wobbleGrabber.setPosition(wobbleGrabberOpen);
+        wobblePivot.setPosition(wobblePivotLow);
     }
 
     public void closeRaiseWobble() {
+        Timing.Timer wobbleTimer = new Timing.Timer(250, TimeUnit.MICROSECONDS);
         wobbleGrabber.setPosition(wobbleGrabberClosed);
-        wobblePivot.setPosition(wobblePivotHigh);
+        wobbleTimer.start();
+        if (wobbleTimer.done()) {
+            wobblePivot.setPosition(wobblePivotHigh);
+        }
     }
 }
 
